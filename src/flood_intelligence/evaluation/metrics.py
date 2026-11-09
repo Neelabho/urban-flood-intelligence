@@ -43,9 +43,12 @@ def threshold_metrics(y, p, thr: float) -> dict:
 
 def score(y, p, thr: float | None = None) -> dict:
     y, p = np.asarray(y), np.asarray(p)
+    probabilistic = bool(np.nanmin(p) >= 0 and np.nanmax(p) <= 1)
     out = {"n": int(len(y)), "n_pos": int(y.sum()), "prevalence": float(y.mean()),
            "roc_auc": float(roc_auc_score(y, p)), "pr_auc": float(average_precision_score(y, p)),
-           "brier": float(brier_score_loss(y, p)), "ece": expected_calibration_error(y, p)}
+           # Brier/ECE are only defined for probabilities (non-learned index baselines are scores)
+           "brier": float(brier_score_loss(y, p)) if probabilistic else None,
+           "ece": expected_calibration_error(y, p) if probabilistic else None}
     out["pr_auc_lift"] = out["pr_auc"] / out["prevalence"]
     out.update(threshold_metrics(y, p, best_f1_threshold(y, p) if thr is None else thr))
     return out

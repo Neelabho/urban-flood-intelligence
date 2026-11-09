@@ -1,0 +1,62 @@
+{
+  "experiment_id": "sus_kolkata_block_bootstrap_ensemble",
+  "group": "uncertainty",
+  "date_utc": "2026-11-09T08:58:22+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "xgboost",
+  "hyperparameters": {
+    "max_depth": 4,
+    "n_estimators": 200,
+    "pr_auc": 0.18318031932546736,
+    "roc_auc": 0.8875811448077189
+  },
+  "n_members": 30,
+  "metrics": {
+    "median_sd_pct": 0.15708498121757988,
+    "p90_sd_pct": 0.22564950488785518,
+    "median_sd_pct_urban": 0.1622088311213856,
+    "median_sd_pct_nonurban": 0.15414210463020778
+  },
+  "validation": "members fitted on block-bootstrap resamples of all labelled cells"
+}

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from ..config import METADATA, ROOT
@@ -32,7 +32,7 @@ def record(dataset_id: str, city: str, path: Path, source_url: str, **extra) -> 
             "city": city,
             "path": rel,
             "source_url": source_url,
-            "downloaded_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "downloaded_utc": datetime.now(UTC).isoformat(timespec="seconds"),
             "bytes": path.stat().st_size if path.exists() and path.is_file() else None,
             "sha256": _sha256(path),
             **extra,

@@ -1,0 +1,126 @@
+{
+  "generated_for": "kolkata",
+  "static_features": {
+    "n_cells": 16875,
+    "missing": {
+      "hand_mean": {
+        "n_missing": 855,
+        "frac_missing": 0.0507
+      },
+      "hand_min": {
+        "n_missing": 17,
+        "frac_missing": 0.001
+      },
+      "osm_buildings_per_built_ha": {
+        "n_missing": 7103,
+        "frac_missing": 0.4209
+      }
+    },
+    "hand_missingness": {
+      "hand_missing_neighbour_share": 0.9707602339181286,
+      "hand_missing_neighbour_expected_if_random": 0.18777767779239496,
+      "interpretation": "Missing HAND differs systematically in terrain covariates (KS tests) and is spatially clustered, so it is not MCAR; it is plausibly MAR given terrain, which supports model-based imputation from terrain covariates plus a missingness flag."
+    }
+  },
+  "imputation": {
+    "selected": "knn_k8",
+    "rule": "lowest mean RMSE for hand_mean under spatially-blocked masking (3 seeds)",
+    "summary": {
+      "random": {
+        "mean": {
+          "hand_mean_rmse_mean": 2.0660195890328024,
+          "hand_mean_rmse_sd": 0.03590391367555506
+        },
+        "median": {
+          "hand_mean_rmse_mean": 2.1098876075540685,
+          "hand_mean_rmse_sd": 0.03628711365785132
+        },
+        "knn_k8": {
+          "hand_mean_rmse_mean": 0.9981420173241808,
+          "hand_mean_rmse_sd": 0.008728738304831098
+        },
+        "iterative_bayesridge": {
+          "hand_mean_rmse_mean": 1.1550484673204167,
+          "hand_mean_rmse_sd": 0.01103251755370552
+        },
+        "iterative_extratrees": {
+          "hand_mean_rmse_mean": 1.060041075210928,
+          "hand_mean_rmse_sd": 0.02077525599345223
+        }
+      },
+      "spatial_block": {
+        "mean": {
+          "hand_mean_rmse_mean": 2.0265092277081873,
+          "hand_mean_rmse_sd": 0.024856057995113805
+        },
+        "median": {
+          "hand_mean_rmse_mean": 2.058162535648645,
+          "hand_mean_rmse_sd": 0.03900075359500813
+        },
+        "knn_k8": {
+          "hand_mean_rmse_mean": 1.0437976149474564,
+          "hand_mean_rmse_sd": 0.01954827835387555
+        },
+        "iterative_bayesridge": {
+          "hand_mean_rmse_mean": 1.178604734248515,
+          "hand_mean_rmse_sd": 0.016559482215014326
+        },
+        "iterative_extratrees": {
+          "hand_mean_rmse_mean": 1.0583810848263198,
+          "hand_mean_rmse_sd": 0.04829571055351524
+        }
+      }
+    },
+    "safeguards": [
+      "labels never imputed",
+      "rainfall never imputed",
+      "missingness indicator retained",
+      "imputer fitted inside each training fold",
+      "imputed cells flagged in outputs"
+    ]
+  },
+  "sentinel1": {
+    "acquisitions": 472,
+    "by_orbit": {
+      "D048": 175,
+      "A012": 154,
+      "D150": 143
+    },
+    "by_year": {
+      "2017": 44,
+      "2018": 63,
+      "2019": 66,
+      "2020": 59,
+      "2021": 53,
+      "2022": 49,
+      "2023": 48,
+      "2024": 41,
+      "2025": 49
+    },
+    "partial_coverage_acquisitions_lt90pct": 175,
+    "otsu_threshold_within_bounds_share": 0.0,
+    "label_feasibility_test": {
+      "n_pairs": 258,
+      "mean_new_water_frac_built": 3.238914237279538e-05,
+      "max_new_water_frac_built": 0.00014094705852298053,
+      "mean_new_water_frac_crop": 0.0014345767667897984,
+      "spearman_built_vs_rain3d": -0.20893683684746098,
+      "spearman_crop_vs_rain3d": -0.01672886065120924,
+      "conclusion": "No rainfall-driven open-water signal in built-up cells; SAR change detection rejected as a label source for urban waterlogging."
+    }
+  },
+  "rainfall": {
+    "imd_days": 3653,
+    "imd_missing_cells_in_study_area": 0,
+    "chirps_days_requested": 1993,
+    "chirps_days_missing": 138,
+    "era5_hours": 94968,
+    "imd_vs_era5_daily_pearson": 0.6680654961350525,
+    "era5_to_imd_ratio_on_imd_wet_days_gt20mm": 0.6068947793320084,
+    "example_2025_09_23": "IMD cells: 224 mm (22.5N 88.0E) vs 3 mm (22.5N 88.25E); press reports 251.4 mm at Alipore - station-sampling effect in the gridded product"
+  },
+  "osm": {
+    "buildings_mapped_cells_share": 0.45238518518518517,
+    "note": "rectangular mapping-campaign patches visible; building counts are used for exposure only"
+  }
+}

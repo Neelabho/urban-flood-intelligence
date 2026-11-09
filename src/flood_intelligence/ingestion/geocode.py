@@ -35,7 +35,7 @@ OSM_OVERRIDES = {
     "Chittaranjan National Cancer Institute": ("critical_facilities", "Chittaranjan National Cancer Institute Hospital", ""),
 }
 ALIASES = {  # spelling variants used by OSM for names in reports
-    "Sukia Street": "Sukeas Street", "Exide More": "Exide Crossing", "Thanthania Kalibari": "Thanthania Kali Bari",
+    "Sukia Street": "Sukeas Street",
     "Chitpore Road": "Rabindra Sarani", "Maa Flyover": "Maa Flyover", "Kidderpore": "Khidirpur",
     "Bhowanipore": "Bhabanipur", "Justice Chandra Madhab Road": "Justice Chandra Madhab Road",
     "Rawdon Street": "Rawdon Street", "Park Circus Connector": "Park Circus Connector",

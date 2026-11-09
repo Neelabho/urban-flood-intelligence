@@ -16,7 +16,6 @@ import rasterio
 from rasterio.enums import Resampling
 from rasterio.merge import merge
 from rasterio.warp import calculate_default_transform, reproject
-from rasterio.windows import from_bounds
 
 from ..config import City, get_city, get_logger
 from .manifest import record

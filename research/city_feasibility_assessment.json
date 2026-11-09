@@ -1,0 +1,83 @@
+{
+  "weights": {
+    "historical_flood_observations": 0.25,
+    "rainfall_observations": 0.2,
+    "satellite_flood_extent": 0.15,
+    "elevation_terrain": 0.1,
+    "land_use": 0.1,
+    "drainage_infrastructure": 0.1,
+    "population_exposure": 0.05,
+    "independent_validation": 0.05
+  },
+  "scores": {
+    "historical_flood_observations": {
+      "kolkata": 7,
+      "mumbai": 7,
+      "evidence": "IFI v3 entries since 2016: Kolkata 4, Mumbai 40 (event-level, district). OpenAlex works 'X AND flood': Kolkata 211, Mumbai 623; 'X AND waterlogging': Kolkata 25, Mumbai 11. Locality-level waterlogging reports verified in this run: Kolkata 93 localities / 14 dated events (accessible archive); Mumbai not verified in this run.",
+      "note": "Mumbai is clearly stronger at event level, Kolkata verified at locality level; scored equal in the base case (see sensitivity)."
+    },
+    "rainfall_observations": {
+      "kolkata": 7,
+      "mumbai": 7,
+      "evidence": "Both covered by IMD 0.25 deg gridded daily, ERA5 hourly, CHIRPS daily. Mumbai's strong orographic gradient makes 0.25 deg grids less representative; Kolkata's gridded product shows station-sampling artefacts (2025-09-23)."
+    },
+    "satellite_flood_extent": {
+      "kolkata": 8,
+      "mumbai": 4,
+      "evidence": "Sentinel-1 RTC monsoon (Jun-Oct) acquisitions 2017-2025: Kolkata 523 across 3 orbits, Mumbai 115 on essentially one orbit.",
+      "post_hoc": "Later analysis in this run showed Sentinel-1 change detection carries no rainfall-driven signal in Kolkata's built-up cells, so this advantage did not translate into usable urban labels."
+    },
+    "elevation_terrain": {
+      "kolkata": 4,
+      "mumbai": 7,
+      "evidence": "Copernicus GLO-30 relief (p95-p5): Kolkata 10.1 m, Mumbai 130.2 m. In Kolkata DSM errors are comparable to the terrain signal."
+    },
+    "land_use": {
+      "kolkata": 7,
+      "mumbai": 7,
+      "evidence": "ESA WorldCover 2021 (10 m) and JRC GSW available for both."
+    },
+    "drainage_infrastructure": {
+      "kolkata": 4,
+      "mumbai": 5,
+      "evidence": "OSM drain/ditch/canal ways: Kolkata 385, Mumbai 747. Neither city's storm-drain network is openly published."
+    },
+    "population_exposure": {
+      "kolkata": 8,
+      "mumbai": 6,
+      "evidence": "GHS-POP for both; OSM building ways in study bbox: Kolkata 498,494, Mumbai 116,716; health/school features Kolkata 749, Mumbai 2290."
+    },
+    "independent_validation": {
+      "kolkata": 6,
+      "mumbai": 7,
+      "evidence": "Kolkata: multi-orbit SAR, IFI, news archive. Mumbai: dense IFI record and larger literature for comparison."
+    }
+  },
+  "weighted_totals_base": {
+    "kolkata": 6.55,
+    "mumbai": 6.3
+  },
+  "sensitivity": {
+    "historical: locality-level emphasis": {
+      "kolkata": 6.8,
+      "mumbai": 6.05
+    },
+    "historical: event-level emphasis": {
+      "kolkata": 6.3,
+      "mumbai": 6.55
+    },
+    "historical: equal (base)": {
+      "kolkata": 6.55,
+      "mumbai": 6.3
+    },
+    "satellite criterion re-scored post hoc (SAR unusable for urban labels: both 3)": {
+      "kolkata": 5.8,
+      "mumbai": 6.15
+    }
+  },
+  "selected": "kolkata",
+  "decision": "Kolkata selected as pilot. The primary deliverable is a within-city spatial susceptibility map, which needs locality-level observations; these were verified for Kolkata in this run. Totals are close and the ranking flips with reasonable changes to the historical-observation score or the post-hoc satellite score, so the choice is not robustly dominant. Mumbai has the stronger event-level record and is the recommended next city (especially for temporal event modelling).",
+  "supervised_event_forecasting_feasible": false,
+  "approach": "Neither city has openly available, systematically recorded, time-stamped urban flood labels at hourly resolution. The pilot therefore uses (A) presence/background susceptibility from documented localities and (B) city-scale documented event-day discrimination from rainfall, not hourly flood forecasting.",
+  "evidence_file": "research/city_feasibility_evidence.json"
+}

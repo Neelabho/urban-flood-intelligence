@@ -1,0 +1,109 @@
+{
+  "experiment_id": "sus_kolkata_random_vs_spatial_cv",
+  "group": "spatial_validation",
+  "date_utc": "2026-11-09T08:58:03+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "xgboost",
+  "hyperparameters": {
+    "max_depth": 4,
+    "n_estimators": 200,
+    "pr_auc": 0.18318031932546736,
+    "roc_auc": 0.8875811448077189
+  },
+  "metrics": {
+    "random_cv": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.9190656590569773,
+      "pr_auc": 0.2699402564264048,
+      "brier": 0.012772169250473482,
+      "ece": 0.013220085235455538,
+      "pr_auc_lift": 23.85082299577709,
+      "threshold": 0.6554653644561768,
+      "precision": 0.43478260869565216,
+      "recall": 0.3389830508474576,
+      "specificity": 0.9949553744664338,
+      "f1": 0.38095238095238093,
+      "balanced_accuracy": 0.6669692126569458,
+      "confusion_matrix": [
+        [
+          5128,
+          26
+        ],
+        [
+          39,
+          20
+        ]
+      ]
+    },
+    "spatial_cv": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8875811448077189,
+      "pr_auc": 0.18318031932546736,
+      "brier": 0.015391974947334564,
+      "ece": 0.015780165127553536,
+      "pr_auc_lift": 16.185067875316296,
+      "threshold": 0.5971445441246033,
+      "precision": 0.30158730158730157,
+      "recall": 0.3220338983050847,
+      "specificity": 0.9914629414047342,
+      "f1": 0.31147540983606553,
+      "balanced_accuracy": 0.6567484198549095,
+      "confusion_matrix": [
+        [
+          5110,
+          44
+        ],
+        [
+          40,
+          19
+        ]
+      ]
+    }
+  },
+  "validation": "same model, StratifiedKFold vs StratifiedGroupKFold(2 km blocks)"
+}

@@ -81,6 +81,51 @@
     "note": "residential population per ~90 m cell (GHS-POP R2023A, epoch 2020); modelled, not census counts"
   },
   {
+    "dataset_id": "gpm_imerg_v06_hhr_city_subset",
+    "city": "kolkata",
+    "path": "data/interim/kolkata/rain_imerg_halfhourly.nc",
+    "source_url": "https://planetarycomputer.microsoft.com/dataset/gpm-imerg-hhr",
+    "downloaded_utc": "2026-11-09T08:53:32+00:00",
+    "bytes": 130920,
+    "sha256": "c976ee32df8a559034a1e6613ad665a78f65f3632cf6b45f98db4ab0a834ab39",
+    "windows": [
+      [
+        "2016-08-16",
+        "2016-08-18"
+      ],
+      [
+        "2016-09-04",
+        "2016-09-06"
+      ],
+      [
+        "2018-06-24",
+        "2018-06-26"
+      ],
+      [
+        "2018-07-22",
+        "2018-07-24"
+      ],
+      [
+        "2019-08-16",
+        "2019-08-18"
+      ],
+      [
+        "2019-11-08",
+        "2019-11-11"
+      ],
+      [
+        "2020-05-19",
+        "2020-05-22"
+      ],
+      [
+        "2021-05-10",
+        "2021-05-12"
+      ]
+    ],
+    "variable": "precipitationCal",
+    "note": "event case-study windows only"
+  },
+  {
     "dataset_id": "imd_rf25_daily",
     "city": "india",
     "path": "data/raw/rainfall/imd/imd_rf25_2016.grd",

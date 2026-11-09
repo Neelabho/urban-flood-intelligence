@@ -42,3 +42,6 @@ frontend/.vite/
 .idea/
 .vscode/
 *.log
+
+# generated web data is rebuilt by `python -m flood_intelligence.inference.export`, but the static demo needs it:
+# frontend/public/data is committed intentionally (small, derived, no raw data)

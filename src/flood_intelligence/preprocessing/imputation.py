@@ -96,7 +96,10 @@ def missingness_report(df: pd.DataFrame) -> dict:
     M = np.zeros((H, W), bool)
     M[df.row[miss], df.col[miss]] = True
     nb = np.zeros_like(M)
-    nb[1:] |= M[:-1]; nb[:-1] |= M[1:]; nb[:, 1:] |= M[:, :-1]; nb[:, :-1] |= M[:, 1:]
+    nb[1:] |= M[:-1]
+    nb[:-1] |= M[1:]
+    nb[:, 1:] |= M[:, :-1]
+    nb[:, :-1] |= M[:, 1:]
     p = M.mean()
     return {"columns": out, "hand_missing_vs_observed": tests,
             "hand_missing_neighbour_share": float((nb & M).sum() / max(M.sum(), 1)),

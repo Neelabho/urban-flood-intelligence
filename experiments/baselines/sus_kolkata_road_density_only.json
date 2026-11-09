@@ -1,0 +1,76 @@
+{
+  "experiment_id": "sus_kolkata_road_density_only",
+  "group": "baselines",
+  "date_utc": "2026-11-09T08:57:53+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "road_density_only",
+  "hyperparameters": {},
+  "validation": "non-learned score evaluated on the train split",
+  "metrics": {
+    "n": 5213,
+    "n_pos": 59,
+    "prevalence": 0.01131785919815845,
+    "roc_auc": 0.6719283360628243,
+    "pr_auc": 0.02067465593348275,
+    "brier": null,
+    "ece": null,
+    "pr_auc_lift": 1.8267284979872132,
+    "threshold": 36.266815185546875,
+    "precision": 0.03488372093023256,
+    "recall": 0.1016949152542373,
+    "specificity": 0.9677920062087699,
+    "f1": 0.051948051948051945,
+    "balanced_accuracy": 0.5347434607315036,
+    "confusion_matrix": [
+      [
+        4988,
+        166
+      ],
+      [
+        53,
+        6
+      ]
+    ]
+  }
+}

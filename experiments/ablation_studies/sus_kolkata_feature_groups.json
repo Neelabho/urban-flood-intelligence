@@ -1,0 +1,291 @@
+{
+  "experiment_id": "sus_kolkata_feature_groups",
+  "group": "ablation_studies",
+  "date_utc": "2026-11-09T08:58:12+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "xgboost",
+  "hyperparameters": {
+    "max_depth": 4,
+    "n_estimators": 200,
+    "pr_auc": 0.18318031932546736,
+    "roc_auc": 0.8875811448077189
+  },
+  "metrics": {
+    "all_features": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8875811448077189,
+      "pr_auc": 0.18318031932546736,
+      "brier": 0.015391974947334564,
+      "ece": 0.015780165127553536,
+      "pr_auc_lift": 16.185067875316296,
+      "threshold": 0.5971445441246033,
+      "precision": 0.30158730158730157,
+      "recall": 0.3220338983050847,
+      "specificity": 0.9914629414047342,
+      "f1": 0.31147540983606553,
+      "balanced_accuracy": 0.6567484198549095,
+      "confusion_matrix": [
+        [
+          5110,
+          44
+        ],
+        [
+          40,
+          19
+        ]
+      ]
+    },
+    "without_terrain": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8303999526449755,
+      "pr_auc": 0.06650295741334064,
+      "brier": 0.025179110906020378,
+      "ece": 0.04079723050546545,
+      "pr_auc_lift": 5.875930796538047,
+      "threshold": 0.5850634574890137,
+      "precision": 0.1134020618556701,
+      "recall": 0.1864406779661017,
+      "specificity": 0.983313930927435,
+      "f1": 0.14102564102564102,
+      "balanced_accuracy": 0.5848773044467683,
+      "confusion_matrix": [
+        [
+          5068,
+          86
+        ],
+        [
+          48,
+          11
+        ]
+      ]
+    },
+    "only_terrain": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8331031352972513,
+      "pr_auc": 0.14349464698099176,
+      "brier": 0.01917500763682806,
+      "ece": 0.02804983214895676,
+      "pr_auc_lift": 12.678603300201866,
+      "threshold": 0.700660765171051,
+      "precision": 0.26,
+      "recall": 0.22033898305084745,
+      "specificity": 0.9928211098176174,
+      "f1": 0.23853211009174313,
+      "balanced_accuracy": 0.6065800464342325,
+      "confusion_matrix": [
+        [
+          5117,
+          37
+        ],
+        [
+          46,
+          13
+        ]
+      ]
+    },
+    "without_hydrology": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.87101675183994,
+      "pr_auc": 0.20927351264751717,
+      "brier": 0.015738866248393806,
+      "ece": 0.018659530901280738,
+      "pr_auc_lift": 18.490556295449274,
+      "threshold": 0.6037551760673523,
+      "precision": 0.2608695652173913,
+      "recall": 0.3050847457627119,
+      "specificity": 0.990104772991851,
+      "f1": 0.28125,
+      "balanced_accuracy": 0.6475947593772814,
+      "confusion_matrix": [
+        [
+          5103,
+          51
+        ],
+        [
+          41,
+          18
+        ]
+      ]
+    },
+    "only_hydrology": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.6989289214235447,
+      "pr_auc": 0.021603499293736502,
+      "brier": 0.05196993379219944,
+      "ece": 0.09850444626012136,
+      "pr_auc_lift": 1.9087973189533627,
+      "threshold": 0.10175289213657379,
+      "precision": 0.02656137832017229,
+      "recall": 0.6271186440677966,
+      "specificity": 0.7369033760186263,
+      "f1": 0.0509641873278237,
+      "balanced_accuracy": 0.6820110100432115,
+      "confusion_matrix": [
+        [
+          3798,
+          1356
+        ],
+        [
+          22,
+          37
+        ]
+      ]
+    },
+    "without_urban": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8608551528186105,
+      "pr_auc": 0.14721310795917258,
+      "brier": 0.018013154809010248,
+      "ece": 0.025549772547640588,
+      "pr_auc_lift": 13.007151386290962,
+      "threshold": 0.5165796279907227,
+      "precision": 0.21649484536082475,
+      "recall": 0.3559322033898305,
+      "specificity": 0.9852541715172681,
+      "f1": 0.2692307692307692,
+      "balanced_accuracy": 0.6705931874535493,
+      "confusion_matrix": [
+        [
+          5078,
+          76
+        ],
+        [
+          38,
+          21
+        ]
+      ]
+    },
+    "only_urban": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.7934794762008116,
+      "pr_auc": 0.06903142892100077,
+      "brier": 0.03048057199775719,
+      "ece": 0.056673055041157244,
+      "pr_auc_lift": 6.099336253647068,
+      "threshold": 0.49564704298973083,
+      "precision": 0.09248554913294797,
+      "recall": 0.2711864406779661,
+      "specificity": 0.9695382227396198,
+      "f1": 0.1379310344827586,
+      "balanced_accuracy": 0.620362331708793,
+      "confusion_matrix": [
+        [
+          4997,
+          157
+        ],
+        [
+          43,
+          16
+        ]
+      ]
+    },
+    "without_sar": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.8801457482422735,
+      "pr_auc": 0.16377894963906714,
+      "brier": 0.015763306043827578,
+      "ece": 0.016674414273961446,
+      "pr_auc_lift": 14.470841770651814,
+      "threshold": 0.5776742100715637,
+      "precision": 0.29850746268656714,
+      "recall": 0.3389830508474576,
+      "specificity": 0.9908808692277843,
+      "f1": 0.31746031746031744,
+      "balanced_accuracy": 0.6649319600376209,
+      "confusion_matrix": [
+        [
+          5107,
+          47
+        ],
+        [
+          39,
+          20
+        ]
+      ]
+    },
+    "only_sar": {
+      "n": 5213,
+      "n_pos": 59,
+      "prevalence": 0.01131785919815845,
+      "roc_auc": 0.6780055642153865,
+      "pr_auc": 0.03684222384539636,
+      "brier": 0.06735398951973075,
+      "ece": 0.1464320497540248,
+      "pr_auc_lift": 3.255229032305953,
+      "threshold": 0.700024425983429,
+      "precision": 0.0872093023255814,
+      "recall": 0.2542372881355932,
+      "specificity": 0.9695382227396198,
+      "f1": 0.12987012987012986,
+      "balanced_accuracy": 0.6118877554376065,
+      "confusion_matrix": [
+        [
+          4997,
+          157
+        ],
+        [
+          44,
+          15
+        ]
+      ]
+    }
+  },
+  "validation": "StratifiedGroupKFold(5); groups: ['terrain', 'hydrology', 'urban', 'sar']"
+}

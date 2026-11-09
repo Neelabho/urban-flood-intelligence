@@ -1,0 +1,235 @@
+{
+  "experiment_id": "sus_kolkata_holdout_test_blocks",
+  "group": "spatial_validation",
+  "date_utc": "2026-11-09T08:58:05+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "xgboost",
+  "hyperparameters": {
+    "max_depth": 4,
+    "n_estimators": 200,
+    "pr_auc": 0.18318031932546736,
+    "roc_auc": 0.8875811448077189
+  },
+  "metrics": {
+    "xgboost": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.8584034381858083,
+      "pr_auc": 0.1232117599893759,
+      "brier": 0.020265614613890648,
+      "ece": 0.024381860594632338,
+      "pr_auc_lift": 10.65011650408168,
+      "threshold": 0.5971445441246033,
+      "precision": 0.18518518518518517,
+      "recall": 0.3125,
+      "specificity": 0.9839063643013899,
+      "f1": 0.2325581395348837,
+      "balanced_accuracy": 0.648203182150695,
+      "confusion_matrix": [
+        [
+          1345,
+          22
+        ],
+        [
+          11,
+          5
+        ]
+      ],
+      "ci95_block_bootstrap": {
+        "roc_auc": [
+          0.6287842997629381,
+          0.970282382027557
+        ],
+        "pr_auc": [
+          0.01382760984668262,
+          0.5222627671514066
+        ],
+        "brier": [
+          0.0075814346317201855,
+          0.03628113307058809
+        ],
+        "recall": [
+          0.0,
+          0.5
+        ],
+        "precision": [
+          0.0,
+          0.6673076923076917
+        ]
+      }
+    },
+    "logistic_regression": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.8519568397951719,
+      "pr_auc": 0.12550058353437038,
+      "brier": 0.10978969186544418,
+      "ece": 0.19194598249939224,
+      "pr_auc_lift": 10.84795668925214,
+      "threshold": 0.947797954082489,
+      "precision": 0.1935483870967742,
+      "recall": 0.375,
+      "specificity": 0.9817117776152158,
+      "f1": 0.25531914893617014,
+      "balanced_accuracy": 0.6783558888076079,
+      "confusion_matrix": [
+        [
+          1342,
+          25
+        ],
+        [
+          10,
+          6
+        ]
+      ]
+    },
+    "random_forest": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.8651700804681784,
+      "pr_auc": 0.15040812038411652,
+      "brier": 0.013015124182308232,
+      "ece": 0.01761504615850279,
+      "pr_auc_lift": 13.000901905702072,
+      "threshold": 0.4485290640872985,
+      "precision": 0.3333333333333333,
+      "recall": 0.25,
+      "specificity": 0.9941477688368691,
+      "f1": 0.28571428571428575,
+      "balanced_accuracy": 0.6220738844184346,
+      "confusion_matrix": [
+        [
+          1359,
+          8
+        ],
+        [
+          12,
+          4
+        ]
+      ]
+    },
+    "lightgbm": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.8786119239209949,
+      "pr_auc": 0.2782089636581568,
+      "brier": 0.013291104586293801,
+      "ece": 0.010864172632026475,
+      "pr_auc_lift": 24.04768729620193,
+      "threshold": 0.9468080318896841,
+      "precision": 1.0,
+      "recall": 0.1875,
+      "specificity": 1.0,
+      "f1": 0.3157894736842105,
+      "balanced_accuracy": 0.59375,
+      "confusion_matrix": [
+        [
+          1367,
+          0
+        ],
+        [
+          13,
+          3
+        ]
+      ]
+    },
+    "physical_terrain_index": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.45761704462326264,
+      "pr_auc": 0.01122331799639697,
+      "brier": 0.30341585368182405,
+      "ece": 0.48879248011569054,
+      "pr_auc_lift": 0.9701155493135631,
+      "threshold": 0.3300795372378887,
+      "precision": 0.01282051282051282,
+      "recall": 0.8125,
+      "specificity": 0.2677395757132407,
+      "f1": 0.02524271844660194,
+      "balanced_accuracy": 0.5401197878566204,
+      "confusion_matrix": [
+        [
+          366,
+          1001
+        ],
+        [
+          3,
+          13
+        ]
+      ]
+    },
+    "built_fraction_only": {
+      "n": 1383,
+      "n_pos": 16,
+      "prevalence": 0.011569052783803326,
+      "roc_auc": 0.6935579736649597,
+      "pr_auc": 0.021219591834911514,
+      "brier": 0.45348215103149414,
+      "ece": 0.6287609068535414,
+      "pr_auc_lift": 1.834168469230164,
+      "threshold": 0.9500704407691956,
+      "precision": 0.02654867256637168,
+      "recall": 0.1875,
+      "specificity": 0.9195318215069496,
+      "f1": 0.046511627906976744,
+      "balanced_accuracy": 0.5535159107534748,
+      "confusion_matrix": [
+        [
+          1257,
+          110
+        ],
+        [
+          13,
+          3
+        ]
+      ]
+    }
+  },
+  "validation": "untouched 20% of 2 km blocks; threshold frozen from train OOF"
+}

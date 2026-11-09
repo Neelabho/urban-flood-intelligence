@@ -1,0 +1,86 @@
+[
+  {
+    "id": "sentinel1_rtc",
+    "provider": "ESA Copernicus; RTC processing by Catalyst, hosted by Microsoft Planetary Computer",
+    "url": "https://planetarycomputer.microsoft.com/dataset/sentinel-1-rtc",
+    "license": "Copernicus Sentinel data terms (free, open); PC terms of use",
+    "nature": "observed (satellite)"
+  },
+  {
+    "id": "copernicus_dem_glo30",
+    "provider": "ESA / Airbus (Copernicus)",
+    "url": "https://planetarycomputer.microsoft.com/dataset/cop-dem-glo-30",
+    "license": "Copernicus DEM licence (free)",
+    "nature": "observed-derived (surface model)"
+  },
+  {
+    "id": "esa_worldcover_2021",
+    "provider": "ESA / VITO",
+    "url": "https://planetarycomputer.microsoft.com/dataset/esa-worldcover",
+    "license": "CC BY 4.0",
+    "nature": "derived (classified satellite imagery)"
+  },
+  {
+    "id": "jrc_gsw",
+    "provider": "EC JRC / Google",
+    "url": "https://planetarycomputer.microsoft.com/dataset/jrc-gsw",
+    "license": "Copernicus programme, free use with attribution",
+    "nature": "derived (Landsat)"
+  },
+  {
+    "id": "ghs_pop_2020",
+    "provider": "EC JRC (GHSL)",
+    "url": "https://ghsl.jrc.ec.europa.eu/ghs_pop2023.php",
+    "license": "CC BY 4.0",
+    "nature": "modelled (census disaggregated by built volume)"
+  },
+  {
+    "id": "osm",
+    "provider": "OpenStreetMap contributors via Overpass API",
+    "url": "https://www.openstreetmap.org/",
+    "license": "ODbL 1.0",
+    "nature": "volunteered geographic information"
+  },
+  {
+    "id": "imd_rf25_daily",
+    "provider": "India Meteorological Department, Pune",
+    "url": "https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_Bin.html",
+    "license": "IMD open data (free download for research)",
+    "nature": "observed (gauge network, interpolated)"
+  },
+  {
+    "id": "chirps_v2_daily",
+    "provider": "UCSB Climate Hazards Center",
+    "url": "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/global_daily/cogs/p05/",
+    "license": "CC BY 4.0 (public domain dedication)",
+    "nature": "satellite-derived (IR + station blending)"
+  },
+  {
+    "id": "gpm_imerg_v06_hhr",
+    "provider": "NASA GPM / PPS; Zarr mirror by Microsoft PC",
+    "url": "https://planetarycomputer.microsoft.com/dataset/gpm-imerg-hhr",
+    "license": "NASA open data",
+    "nature": "satellite-derived"
+  },
+  {
+    "id": "era5_hourly",
+    "provider": "ECMWF / Copernicus C3S; served by Open-Meteo",
+    "url": "https://open-meteo.com/en/docs/historical-weather-api",
+    "license": "CC BY 4.0 (Open-Meteo), Copernicus licence (ERA5)",
+    "nature": "reanalysis (model)"
+  },
+  {
+    "id": "documented_waterlogging_reports",
+    "provider": "UFII compilation from cited news reports (Millennium Post, Deccan Herald/PTI)",
+    "url": "data/raw/flood_observations/kolkata/documented_waterlogging_reports.csv",
+    "license": "facts with source citations (project CC BY 4.0)",
+    "nature": "observational reports (secondary sources)"
+  },
+  {
+    "id": "india_flood_inventory",
+    "provider": "Saharia et al., Zenodo",
+    "url": "https://doi.org/10.5281/zenodo.16994648",
+    "license": "CC BY-NC 4.0",
+    "nature": "compiled inventory (IMD Disastrous Weather Events, EM-DAT, DFO)"
+  }
+]

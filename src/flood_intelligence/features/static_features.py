@@ -116,7 +116,9 @@ def _lines_length_per_cell(gdf, grid: Grid, step: float = 10.0) -> np.ndarray:
                 continue
             mid = (c[1:] + c[:-1]) / 2
             seg = np.hypot(*(c[1:] - c[:-1]).T)
-            xs.append(mid[:, 0]); ys.append(mid[:, 1]); ws.append(seg)
+            xs.append(mid[:, 0])
+            ys.append(mid[:, 1])
+            ws.append(seg)
     return _hist(np.concatenate(xs), np.concatenate(ys), grid, np.concatenate(ws))
 
 

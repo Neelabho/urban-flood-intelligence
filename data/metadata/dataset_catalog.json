@@ -1,0 +1,361 @@
+[
+  {
+    "id": "sentinel1_rtc",
+    "title": "Sentinel-1 IW GRD, radiometrically terrain-corrected gamma0 (VV, VH)",
+    "provider": "ESA Copernicus; RTC processing by Catalyst, hosted by Microsoft Planetary Computer",
+    "url": "https://planetarycomputer.microsoft.com/dataset/sentinel-1-rtc",
+    "license": "Copernicus Sentinel data terms (free, open); PC terms of use",
+    "period": "2017-05..2025-11 (May-Nov acquisitions)",
+    "temporal_resolution": "6-12 days per orbit",
+    "spatial_resolution": "10 m native; stored at 25 m (block-averaged from 20 m overview)",
+    "crs": "EPSG:32645",
+    "format": "Cloud-optimised GeoTIFF -> int16 dB x100 GeoTIFF",
+    "nature": "observed (satellite)",
+    "used_for": "SAR water-occurrence / backscatter features; label-feasibility test (rejected as label source)",
+    "limitations": "C-band SAR is largely blind to shallow flooding between buildings; revisit misses short-lived waterlogging; orbit D150 covers only the eastern ~17% of the study area.",
+    "downloads": [
+      {
+        "path": "data/raw/satellite/sentinel1/kolkata/index.csv",
+        "downloaded_utc": "2026-11-09T08:06:49+00:00",
+        "bytes": 90104,
+        "sha256": "02510e6121c868ee8111d043b941fcc5781a7f9331be6cbe5a7f7243e8e3562d"
+      }
+    ]
+  },
+  {
+    "id": "copernicus_dem_glo30",
+    "title": "Copernicus DEM GLO-30 (DSM)",
+    "provider": "ESA / Airbus (Copernicus)",
+    "url": "https://planetarycomputer.microsoft.com/dataset/cop-dem-glo-30",
+    "license": "Copernicus DEM licence (free)",
+    "period": "2011-2015 acquisitions",
+    "temporal_resolution": "static",
+    "spatial_resolution": "30 m",
+    "crs": "EPSG:4326 -> EPSG:32645",
+    "format": "COG",
+    "nature": "observed-derived (surface model)",
+    "used_for": "elevation, slope, relative elevation, depressions, flow accumulation, HAND, TWI",
+    "limitations": "Surface model includes buildings and trees; vertical error is large relative to Kolkata's ~10 m relief.",
+    "downloads": [
+      {
+        "path": "data/raw/elevation/kolkata/copernicus_glo30_dem_utm30m.tif",
+        "downloaded_utc": "2026-11-09T07:39:19+00:00",
+        "bytes": 5547973,
+        "sha256": "215e6e920eb1fd6bde6c4e460bc9554b2452887cda78519b360283788274bc93"
+      }
+    ]
+  },
+  {
+    "id": "esa_worldcover_2021",
+    "title": "ESA WorldCover 2021 v200",
+    "provider": "ESA / VITO",
+    "url": "https://planetarycomputer.microsoft.com/dataset/esa-worldcover",
+    "license": "CC BY 4.0",
+    "period": "2021",
+    "temporal_resolution": "static (annual product)",
+    "spatial_resolution": "10 m",
+    "crs": "EPSG:4326 -> EPSG:32645",
+    "format": "COG",
+    "nature": "derived (classified satellite imagery)",
+    "used_for": "land-cover fractions (built-up as impervious proxy), urban modelling domain",
+    "limitations": "Reported overall accuracy ~77% globally; built-up/tree confusion in dense canopy neighbourhoods.",
+    "downloads": [
+      {
+        "path": "data/raw/landcover/kolkata/esa_worldcover_2021_v200_utm10m.tif",
+        "downloaded_utc": "2026-11-09T07:39:32+00:00",
+        "bytes": 1301844,
+        "sha256": "640bd2969b5d6f5052a1ded23f6672ba3d63127494104d94b0277fbfdff9e2f4"
+      }
+    ]
+  },
+  {
+    "id": "jrc_gsw",
+    "title": "JRC Global Surface Water v1.4 (occurrence, seasonality)",
+    "provider": "EC JRC / Google",
+    "url": "https://planetarycomputer.microsoft.com/dataset/jrc-gsw",
+    "license": "Copernicus programme, free use with attribution",
+    "period": "1984-2021",
+    "temporal_resolution": "static summary",
+    "spatial_resolution": "30 m",
+    "crs": "EPSG:4326 -> EPSG:32645",
+    "format": "COG",
+    "nature": "derived (Landsat)",
+    "used_for": "permanent-water mask (occurrence >= 75%), distance to permanent water",
+    "limitations": "Landsat 30 m misses narrow canals and small ponds.",
+    "downloads": [
+      {
+        "path": "data/raw/hydrology/kolkata/jrc_gsw_v1_4_occurrence_utm30m.tif",
+        "downloaded_utc": "2026-11-09T07:39:38+00:00",
+        "bytes": 110306,
+        "sha256": "ef347edf7130eb583ffca95407394c27d41b214874759aff59e4fe3ac5801daa"
+      },
+      {
+        "path": "data/raw/hydrology/kolkata/jrc_gsw_v1_4_seasonality_utm30m.tif",
+        "downloaded_utc": "2026-11-09T07:39:40+00:00",
+        "bytes": 52749,
+        "sha256": "4ff32a6d3118ea26da767b441b319c12020cee03826cd5c2cc847681e9b2ed64"
+      }
+    ]
+  },
+  {
+    "id": "ghs_pop_2020",
+    "title": "GHS-POP R2023A, epoch 2020, 3 arc-second",
+    "provider": "EC JRC (GHSL)",
+    "url": "https://ghsl.jrc.ec.europa.eu/ghs_pop2023.php",
+    "license": "CC BY 4.0",
+    "period": "2020",
+    "temporal_resolution": "static",
+    "spatial_resolution": "~90 m",
+    "crs": "EPSG:4326 -> EPSG:32645",
+    "format": "GeoTIFF (windowed read from zipped tile)",
+    "nature": "modelled (census disaggregated by built volume)",
+    "used_for": "population exposure",
+    "limitations": "Modelled estimate, not a census count; local hotspots reflect built-volume allocation.",
+    "downloads": [
+      {
+        "path": "data/raw/population/kolkata/ghs_pop_e2020_r2023a_3ss.tif",
+        "downloaded_utc": "2026-11-09T08:06:58+00:00",
+        "bytes": 926343,
+        "sha256": "a7138f37481f364ae071dde0650fcc5806199f24cd2e9b3b40e5d07afb9ffe02"
+      }
+    ]
+  },
+  {
+    "id": "osm",
+    "title": "OpenStreetMap: buildings, roads, waterways, water bodies, critical facilities",
+    "provider": "OpenStreetMap contributors via Overpass API",
+    "url": "https://www.openstreetmap.org/",
+    "license": "ODbL 1.0",
+    "period": "snapshot 2026-11-09",
+    "temporal_resolution": "snapshot",
+    "spatial_resolution": "vector",
+    "crs": "EPSG:4326 -> EPSG:32645",
+    "format": "GeoParquet",
+    "nature": "volunteered geographic information",
+    "used_for": "road density, drain/canal density, distances, exposure counts, geocoding",
+    "limitations": "Completeness varies (visible mapping-campaign tiles in buildings); underground storm drains are not mapped; absence in OSM is not absence on the ground.",
+    "downloads": [
+      {
+        "path": "data/raw/infrastructure/kolkata/osm_buildings_centroids.parquet",
+        "downloaded_utc": "2026-11-09T08:06:33+00:00",
+        "bytes": 11338468,
+        "sha256": "ccf0104eeddb9c57e4afc6ed187bc4f3330510f81c413327b5c635ee4727c13f"
+      },
+      {
+        "path": "data/raw/infrastructure/kolkata/osm_critical_facilities.parquet",
+        "downloaded_utc": "2026-11-09T08:10:31+00:00",
+        "bytes": 58870,
+        "sha256": "946a85bbfb21a0b7c62d8188cdd4f65c2dadc5c6d0197ad1bee1cab7eae2bb6b"
+      },
+      {
+        "path": "data/raw/infrastructure/kolkata/osm_roads.parquet",
+        "downloaded_utc": "2026-11-09T08:07:40+00:00",
+        "bytes": 13745507,
+        "sha256": "48bf7de7c6de313fafb06cbc13eebed1a0e81657f01ee7fc46db386a666bd2b3"
+      },
+      {
+        "path": "data/raw/hydrology/kolkata/osm_water_bodies.parquet",
+        "downloaded_utc": "2026-11-09T08:09:38+00:00",
+        "bytes": 1530087,
+        "sha256": "563743360f3eb6bec4d274141aca15b8e9656426d6a1d00042ce89d873aa64a7"
+      },
+      {
+        "path": "data/raw/hydrology/kolkata/osm_waterways.parquet",
+        "downloaded_utc": "2026-11-09T08:08:39+00:00",
+        "bytes": 154965,
+        "sha256": "1736223612902163efc7b814db2c384fc766e3b89d40377321b77845f4c30a26"
+      }
+    ]
+  },
+  {
+    "id": "imd_rf25_daily",
+    "title": "IMD gridded daily rainfall 0.25 deg (Pai et al. 2014)",
+    "provider": "India Meteorological Department, Pune",
+    "url": "https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_Bin.html",
+    "license": "IMD open data (free download for research)",
+    "period": "2016-2025",
+    "temporal_resolution": "daily (08:30 IST to 08:30 IST)",
+    "spatial_resolution": "0.25 deg",
+    "crs": "EPSG:4326",
+    "format": "binary .grd",
+    "nature": "observed (gauge network, interpolated)",
+    "used_for": "event-day rainfall features; event rainfall context",
+    "limitations": "Interpolated from stations; strong local gradients (e.g., 224 mm vs 3 mm in adjacent cells on 2025-09-23) indicate station-sampling effects; 2025 values may be provisional.",
+    "downloads": [
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2016.grd",
+        "downloaded_utc": "2026-11-09T08:06:13+00:00",
+        "bytes": 25495560,
+        "sha256": "7d47dd937eb68d3e64e77f20d40597eeebb4d5329704857f604c4c4618dbf838"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2017.grd",
+        "downloaded_utc": "2026-11-09T08:06:40+00:00",
+        "bytes": 25425900,
+        "sha256": "dc9109fc3c4c2dbcf8eea97114fa53a814ce677a8e64b567389f7d3da076c23a"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2018.grd",
+        "downloaded_utc": "2026-11-09T08:06:53+00:00",
+        "bytes": 25425900,
+        "sha256": "78ae74184b0ece2a9a03bb16cca6f7361abcae1e772ce3e6d685110b2af18c33"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2019.grd",
+        "downloaded_utc": "2026-11-09T08:07:00+00:00",
+        "bytes": 25425900,
+        "sha256": "dfb714184e16624cd43af8e932e3245c0d6cf1bacd9556e2cf44d962c9733f3f"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2020.grd",
+        "downloaded_utc": "2026-11-09T08:07:08+00:00",
+        "bytes": 25495560,
+        "sha256": "e19532760221e68711132c98f05cc3ceb7b399e55dbe9bd35b02589bbf2e46ff"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2021.grd",
+        "downloaded_utc": "2026-11-09T08:07:16+00:00",
+        "bytes": 25425900,
+        "sha256": "7f5128e82aa6d362b165898f7f5902d5edd12cb8265c71e2304f89053d5a2678"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2022.grd",
+        "downloaded_utc": "2026-11-09T08:07:22+00:00",
+        "bytes": 25425900,
+        "sha256": "9cd1654631ed918f55fbe12e08ef7c0593019c4a3399e695f0b0398283fcbb3e"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2023.grd",
+        "downloaded_utc": "2026-11-09T08:07:28+00:00",
+        "bytes": 25425900,
+        "sha256": "f308b916a4a2a57a66ce9d4987c60bb7756041434baed31f4342122dc3800ced"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2024.grd",
+        "downloaded_utc": "2026-11-09T08:07:34+00:00",
+        "bytes": 25495560,
+        "sha256": "09d3c89a084f13f3ec534170ce9d98fafc6ff8c29b87d1c83cc2fcd82b495601"
+      },
+      {
+        "path": "data/raw/rainfall/imd/imd_rf25_2025.grd",
+        "downloaded_utc": "2026-11-09T08:07:42+00:00",
+        "bytes": 25425900,
+        "sha256": "b4fa5ffb389496c0fa7d5a468d1cb47e4db0bcabcd11be4f273c0e6cfa7d611d"
+      },
+      {
+        "path": "data/interim/kolkata/rain_imd_daily.nc",
+        "downloaded_utc": "2026-11-09T08:07:43+00:00",
+        "bytes": 190436,
+        "sha256": "640d408ea5f1a0cf638de9bb0811a4e4e45bbbe02ce56e9e68edf0ac3e0d8380"
+      }
+    ]
+  },
+  {
+    "id": "chirps_v2_daily",
+    "title": "CHIRPS v2.0 daily 0.05 deg",
+    "provider": "UCSB Climate Hazards Center",
+    "url": "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/global_daily/cogs/p05/",
+    "license": "CC BY 4.0 (public domain dedication)",
+    "period": "2016-2026 (May-Oct)",
+    "temporal_resolution": "daily (UTC day)",
+    "spatial_resolution": "0.05 deg",
+    "crs": "EPSG:4326",
+    "format": "COG",
+    "nature": "satellite-derived (IR + station blending)",
+    "used_for": "satellite rainfall product in the RQ2 comparison",
+    "limitations": "Underestimates convective extremes (e.g., ~62 mm vs ~250 mm observed on 22-23 Sep 2025); some days unavailable from the server (HTTP 403).",
+    "downloads": [
+      {
+        "path": "data/interim/kolkata/rain_chirps_daily.nc",
+        "downloaded_utc": "2026-11-09T08:39:51+00:00",
+        "bytes": 518732,
+        "sha256": "3ade1325473d04c4f3a662ba07e3319dbe802fd070f1df05c2e3456737e9c1e8"
+      }
+    ]
+  },
+  {
+    "id": "gpm_imerg_v06_hhr",
+    "title": "GPM IMERG V06 Final, half-hourly 0.1 deg",
+    "provider": "NASA GPM / PPS; Zarr mirror by Microsoft PC",
+    "url": "https://planetarycomputer.microsoft.com/dataset/gpm-imerg-hhr",
+    "license": "NASA open data",
+    "period": "event windows 2016-2021",
+    "temporal_resolution": "30 min",
+    "spatial_resolution": "0.1 deg",
+    "crs": "EPSG:4326",
+    "format": "Zarr",
+    "nature": "satellite-derived",
+    "used_for": "sub-daily case studies of documented events only",
+    "limitations": "Anonymous mirror ends 2021-05 and stores 311 MB global chunks; multi-year use needs NASA Earthdata credentials.",
+    "downloads": [
+      {
+        "path": "data/interim/kolkata/rain_imerg_halfhourly.nc",
+        "downloaded_utc": "2026-11-09T08:53:32+00:00",
+        "bytes": 130920,
+        "sha256": "c976ee32df8a559034a1e6613ad665a78f65f3632cf6b45f98db4ab0a834ab39"
+      }
+    ]
+  },
+  {
+    "id": "era5_hourly",
+    "title": "ERA5 hourly total precipitation (via Open-Meteo archive API)",
+    "provider": "ECMWF / Copernicus C3S; served by Open-Meteo",
+    "url": "https://open-meteo.com/en/docs/historical-weather-api",
+    "license": "CC BY 4.0 (Open-Meteo), Copernicus licence (ERA5)",
+    "period": "2016-01..2026-10",
+    "temporal_resolution": "hourly",
+    "spatial_resolution": "0.25 deg (9 nodes)",
+    "crs": "EPSG:4326",
+    "format": "JSON -> Parquet",
+    "nature": "reanalysis (model)",
+    "used_for": "sub-daily intensity features, lead-time experiment, 2026 season (IMD not yet released)",
+    "limitations": "Reanalysis smooths convective peaks (wet-day totals ~44% of IMD on average).",
+    "downloads": [
+      {
+        "path": "data/interim/kolkata/rain_era5_hourly.parquet",
+        "downloaded_utc": "2026-11-09T08:37:03+00:00",
+        "bytes": 2742721,
+        "sha256": "7e2697cba519ac2ea486dae49f37a98f8895a735b8103138e6018f5dbe545012"
+      }
+    ]
+  },
+  {
+    "id": "documented_waterlogging_reports",
+    "title": "Documented waterlogging localities (compiled for this project)",
+    "provider": "UFII compilation from cited news reports (Millennium Post, Deccan Herald/PTI)",
+    "url": "data/raw/flood_observations/kolkata/documented_waterlogging_reports.csv",
+    "license": "facts with source citations (project CC BY 4.0)",
+    "period": "2021-06..2026-09",
+    "temporal_resolution": "event dates",
+    "spatial_resolution": "locality (geocoded, 100 m-2 km uncertainty)",
+    "crs": "EPSG:4326",
+    "format": "CSV",
+    "nature": "observational reports (secondary sources)",
+    "used_for": "positive labels for susceptibility; event-day labels",
+    "limitations": "Reporting bias toward central/arterial locations and accessible archives; absence of a report is not absence of flooding; geocoding uncertainty.",
+    "downloads": [
+      {
+        "path": "data/interim/kolkata/documented_localities_geocoded.csv",
+        "downloaded_utc": "2026-11-09T08:39:42+00:00",
+        "bytes": 16148,
+        "sha256": "92234f6a5df21e67285c94e1d2be53a7cd8f2395e49b2a64dcc2e6b7d23e1daf"
+      }
+    ]
+  },
+  {
+    "id": "india_flood_inventory",
+    "title": "India Flood Inventory-Impacts (IFI) v3",
+    "provider": "Saharia et al., Zenodo",
+    "url": "https://doi.org/10.5281/zenodo.16994648",
+    "license": "CC BY-NC 4.0",
+    "period": "1967-2023",
+    "temporal_resolution": "event",
+    "spatial_resolution": "district",
+    "crs": "-",
+    "format": "CSV",
+    "nature": "compiled inventory (IMD Disastrous Weather Events, EM-DAT, DFO)",
+    "used_for": "historical event catalogue; event-day labels (Kolkata district)",
+    "limitations": "District-level, fatality-oriented; sparse for urban waterlogging.",
+    "downloads": []
+  }
+]

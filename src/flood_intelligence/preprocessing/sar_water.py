@@ -16,7 +16,6 @@ appear as new water; land-cover stratified evaluation tracks this.
 """
 from __future__ import annotations
 
-import csv
 from datetime import date
 
 import numpy as np

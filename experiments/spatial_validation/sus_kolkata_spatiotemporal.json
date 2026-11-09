@@ -1,0 +1,109 @@
+{
+  "experiment_id": "sus_kolkata_spatiotemporal",
+  "group": "spatial_validation",
+  "date_utc": "2026-11-09T08:58:05+00:00",
+  "git_commit": "e456cfd",
+  "python": "3.12.13",
+  "dataset_version": "74d10aa608b5",
+  "city": "kolkata",
+  "features": [
+    "elev_mean",
+    "elev_min",
+    "elev_std",
+    "slope_mean",
+    "hand_mean",
+    "hand_min",
+    "twi_mean",
+    "log_flowacc_max",
+    "depression_depth_mean",
+    "depression_frac_gt05m",
+    "relelev_1km",
+    "relelev_2km",
+    "dist_waterway_m",
+    "dist_drain_canal_m",
+    "dist_hooghly_m",
+    "dist_perm_water_m",
+    "drain_canal_density_km_km2",
+    "osm_waterbody_frac",
+    "jrc_occurrence_mean",
+    "sar_water_occurrence",
+    "lc_built_frac",
+    "lc_tree_frac",
+    "lc_grass_frac",
+    "lc_crop_frac",
+    "lc_water_frac",
+    "road_density_km_km2",
+    "sar_vv_mean_db",
+    "sar_vv_temporal_std_db"
+  ],
+  "random_seed": 42,
+  "data_split": {
+    "design": "grouped spatial CV on 2 km blocks within train split; test blocks held out",
+    "n_train": 5213,
+    "n_train_pos": 59,
+    "n_test": 1383,
+    "n_test_pos": 16
+  },
+  "model": "xgboost",
+  "hyperparameters": {
+    "max_depth": 4,
+    "n_estimators": 200,
+    "pr_auc": 0.18318031932546736,
+    "roc_auc": 0.8875811448077189
+  },
+  "metrics": {
+    "all_later_localities": {
+      "n": 1411,
+      "n_pos": 44,
+      "prevalence": 0.03118355776045358,
+      "roc_auc": 0.8747589279776552,
+      "pr_auc": 0.3044340089982427,
+      "brier": 0.028514159843325615,
+      "ece": 0.01321618451102317,
+      "pr_auc_lift": 9.762645152193647,
+      "threshold": 0.08102180808782578,
+      "precision": 0.32727272727272727,
+      "recall": 0.4090909090909091,
+      "specificity": 0.9729334308705194,
+      "f1": 0.3636363636363637,
+      "balanced_accuracy": 0.6910121699807142,
+      "confusion_matrix": [
+        [
+          1330,
+          37
+        ],
+        [
+          26,
+          18
+        ]
+      ]
+    },
+    "later_localities_gt500m_from_earlier": {
+      "n": 1398,
+      "n_pos": 31,
+      "prevalence": 0.022174535050071532,
+      "roc_auc": 0.8332350095570711,
+      "pr_auc": 0.11450970995002614,
+      "brier": 0.02503356896340847,
+      "ece": 0.009276192185166858,
+      "pr_auc_lift": 5.164018532585049,
+      "threshold": 0.022891424596309662,
+      "precision": 0.16091954022988506,
+      "recall": 0.45161290322580644,
+      "specificity": 0.9465983906364301,
+      "f1": 0.23728813559322032,
+      "balanced_accuracy": 0.6991056469311183,
+      "confusion_matrix": [
+        [
+          1294,
+          73
+        ],
+        [
+          17,
+          14
+        ]
+      ]
+    }
+  },
+  "validation": "fit: localities first documented 2016-2024 + train-block background; evaluate: localities first documented 2025-2026 vs held-out-block background"
+}

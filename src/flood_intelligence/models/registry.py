@@ -5,7 +5,7 @@ import hashlib
 import json
 import platform
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from ..config import EXPERIMENTS, ROOT
@@ -27,7 +27,7 @@ def log_experiment(group: str, exp_id: str, record: dict) -> Path:
     d = EXPERIMENTS / group
     d.mkdir(parents=True, exist_ok=True)
     rec = {"experiment_id": exp_id, "group": group,
-           "date_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "date_utc": datetime.now(UTC).isoformat(timespec="seconds"),
            "git_commit": _git_rev(), "python": platform.python_version(), **record}
     p = d / f"{exp_id}.json"
     p.write_text(json.dumps(rec, indent=2, default=float))

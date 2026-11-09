@@ -4,7 +4,7 @@ Experiments (all logged to experiments/):
   baselines/          six classifiers + two non-learned baselines under grouped spatial 5-fold CV
   spatial_validation/ random vs spatial CV optimism; held-out test blocks; spatio-temporal validation
   ablation_studies/   leave-one-feature-group-out (terrain / hydrology / urban / SAR)
-  advanced_models/    small PyTorch MLP comparator (same folds)
+  advanced_models/    small PyTorch MLP comparator (same folds; separate process, see deep_tabular.py)
   uncertainty/        block-bootstrap XGBoost ensemble (per-cell spread of percentile rank)
 
 Output scores are *relative susceptibility* (case-control design): predicted values are not absolute flood
@@ -20,11 +20,8 @@ import pandas as pd
 from lightgbm import LGBMClassifier
 from sklearn.base import clone
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
@@ -32,16 +29,10 @@ from xgboost import XGBClassifier
 from ..config import MODELS, get_city, get_logger, save_json
 from ..evaluation.metrics import cluster_bootstrap, curves, score
 from ..features.labels import HAZARD_FEATURES, all_hazard_features
+from .common import N_FOLDS, SEED, oof_predict, pipe
 from .registry import dataset_version, log_experiment
 
 log = get_logger(__name__)
-SEED = 42
-N_FOLDS = 5
-
-
-def pipe(model) -> Pipeline:
-    return Pipeline([("scale", StandardScaler()), ("impute", KNNImputer(n_neighbors=8, weights="distance",
-                                                                        add_indicator=True)), ("model", model)])
 
 
 def model_zoo(pos_weight: float) -> dict:
@@ -70,68 +61,6 @@ def physical_index(df: pd.DataFrame) -> np.ndarray:
         "rel": (-df["relelev_1km"]).rank(pct=True),
     })
     return r.mean(axis=1).to_numpy()
-
-
-def oof_predict(est, X, y, groups, spatial: bool = True) -> np.ndarray:
-    oof = np.zeros(len(y))
-    cv = StratifiedGroupKFold(N_FOLDS, shuffle=True, random_state=SEED) if spatial else StratifiedKFold(
-        N_FOLDS, shuffle=True, random_state=SEED)
-    splits = cv.split(X, y, groups) if spatial else cv.split(X, y)
-    for tr, te in splits:
-        m = clone(est).fit(X.iloc[tr], y[tr])
-        oof[te] = m.predict_proba(X.iloc[te])[:, 1]
-    return oof
-
-
-class TorchMLP:
-    """Small fully-connected network (PyTorch) with the sklearn fit/predict_proba interface."""
-
-    def __init__(self, hidden=(64, 32), epochs=120, lr=1e-3, weight_decay=1e-3, pos_weight=1.0, seed=SEED):
-        self.hidden, self.epochs, self.lr, self.wd, self.pos_weight, self.seed = hidden, epochs, lr, weight_decay, \
-            pos_weight, seed
-
-    def get_params(self, deep=True):
-        return {"hidden": self.hidden, "epochs": self.epochs, "lr": self.lr, "weight_decay": self.wd,
-                "pos_weight": self.pos_weight, "seed": self.seed}
-
-    def set_params(self, **p):
-        for k, v in p.items():
-            setattr(self, "wd" if k == "weight_decay" else k, v)
-        return self
-
-    def fit(self, X, y):
-        import torch
-
-        torch.manual_seed(self.seed)
-        X = torch.tensor(np.asarray(X, dtype="float32"))
-        y = torch.tensor(np.asarray(y, dtype="float32"))
-        layers, d = [], X.shape[1]
-        for h in self.hidden:
-            layers += [torch.nn.Linear(d, h), torch.nn.ReLU(), torch.nn.Dropout(0.2)]
-            d = h
-        layers.append(torch.nn.Linear(d, 1))
-        self.net = torch.nn.Sequential(*layers)
-        opt = torch.optim.AdamW(self.net.parameters(), lr=self.lr, weight_decay=self.wd)
-        lossf = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor(self.pos_weight))
-        g = torch.Generator().manual_seed(self.seed)
-        for _ in range(self.epochs):
-            perm = torch.randperm(len(X), generator=g)
-            for i in range(0, len(X), 256):
-                b = perm[i:i + 256]
-                opt.zero_grad()
-                loss = lossf(self.net(X[b]).squeeze(1), y[b])
-                loss.backward()
-                opt.step()
-        self.classes_ = np.array([0, 1])
-        return self
-
-    def predict_proba(self, X):
-        import torch
-
-        self.net.eval()
-        with torch.no_grad():
-            p = torch.sigmoid(self.net(torch.tensor(np.asarray(X, dtype="float32"))).squeeze(1)).numpy()
-        return np.c_[1 - p, p]
 
 
 def run(city_id: str = "kolkata", n_boot_models: int = 30) -> dict:
@@ -174,19 +103,8 @@ def run(city_id: str = "kolkata", n_boot_models: int = 30) -> dict:
         log_experiment("baselines", f"sus_{city_id}_{bname}", {**common, "model": bname, "hyperparameters": {},
                        "validation": "non-learned score evaluated on the train split", "metrics": s})
 
-    # ---------------- advanced comparator: PyTorch MLP ----------------
-    log.info("spatial CV: torch MLP")
-    mlp = pipe(TorchMLP(pos_weight=min(pos_weight, 30.0)))
-    oof = oof_predict(mlp, Xtr, ytr, gtr, spatial=True)
-    s = score(ytr, oof)
-    s["ci95_block_bootstrap"] = cluster_bootstrap(ytr, oof, gtr, n_boot=500)
-    results["models"]["torch_mlp"] = {"spatial_cv": s, "curves": curves(ytr, oof)}
-    oofs["torch_mlp"] = oof
-    log_experiment("advanced_models", f"sus_{city_id}_torch_mlp_spatialcv",
-                   {**common, "model": "torch_mlp", "hyperparameters": mlp.named_steps["model"].get_params(),
-                    "validation": f"StratifiedGroupKFold({N_FOLDS})", "metrics": s,
-                    "note": "Deep spatiotemporal architectures (ConvLSTM/GNN/Transformer) were not trained: 75 "
-                            "positive cells and ~20 documented event days cannot support them."})
+    # (the PyTorch MLP comparator runs in models/deep_tabular.py, a separate process: PyTorch and
+    #  XGBoost/LightGBM ship different OpenMP runtimes that segfault when loaded together on macOS)
 
     # ---------------- model selection ----------------
     best = max(results["models"], key=lambda k: results["models"][k]["spatial_cv"]["pr_auc"])
@@ -320,7 +238,7 @@ def run(city_id: str = "kolkata", n_boot_models: int = 30) -> dict:
     full["shap_top3"] = [json.dumps(t) for t in top3]
     # partial dependence (model-level) for top features on urban cells
     from sklearn.inspection import partial_dependence
-    urban_X = full.loc[full.urban_domain, feats]
+    urban_X = full.loc[full.urban_domain, feats].astype("float64")
     pdp = {}
     for i in order[:6]:
         f = zcols[i]
@@ -340,8 +258,10 @@ def run(city_id: str = "kolkata", n_boot_models: int = 30) -> dict:
                                  "note": "SHAP attributions describe the model, not causal effects."}
     results["selection"] = {"best_by_spatial_cv_pr_auc": best, "final_model": final_name, "xgb_tuned": gbest,
                             "threshold_from_train_oof": thr,
-                            "rationale": "XGBoost retained as the reporting model (native TreeSHAP, competitive "
-                                         "spatial-CV PR-AUC); all candidates are reported."}
+                            "rationale": "Pre-specified reporting model is XGBoost (tuned on spatial CV). Its PR-AUC "
+                                         "is within the block-bootstrap CI of the best point estimate (reported "
+                                         "above); it is kept for the bootstrap uncertainty ensemble (fast refits) "
+                                         "and TreeSHAP. All candidates are reported."}
     results["meta"] = common
     keep_cols = ["cell_id", "row", "col", "lon", "lat", "label", "role", "split", "block_id", "urban_domain",
                  "susceptibility_score", "susceptibility_pct", "susceptibility_pct_ens_mean",
