@@ -1,0 +1,299 @@
+[
+  {
+    "dataset_id": "chirps_v2_daily_city_subset",
+    "city": "kolkata",
+    "path": "data/interim/kolkata/rain_chirps_daily.nc",
+    "source_url": "https://data.chc.ucsb.edu/products/CHIRPS/v2.0/global_daily/cogs/p05/",
+    "downloaded_utc": "2026-11-09T08:39:51+00:00",
+    "bytes": 518732,
+    "sha256": "3ade1325473d04c4f3a662ba07e3319dbe802fd070f1df05c2e3456737e9c1e8",
+    "months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "years": "2016-2026",
+    "days_requested": 1993,
+    "days_missing": 138
+  },
+  {
+    "dataset_id": "copernicus_dem_glo30",
+    "city": "kolkata",
+    "path": "data/raw/elevation/kolkata/copernicus_glo30_dem_utm30m.tif",
+    "source_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
+    "downloaded_utc": "2026-11-09T07:39:19+00:00",
+    "bytes": 5547973,
+    "sha256": "215e6e920eb1fd6bde6c4e460bc9554b2452887cda78519b360283788274bc93",
+    "items": [
+      "Copernicus_DSM_COG_10_N22_00_E088_00_DEM"
+    ]
+  },
+  {
+    "dataset_id": "documented_localities_geocoded",
+    "city": "kolkata",
+    "path": "data/interim/kolkata/documented_localities_geocoded.csv",
+    "source_url": "https://nominatim.openstreetmap.org/search",
+    "downloaded_utc": "2026-11-09T08:39:42+00:00",
+    "bytes": 16148,
+    "sha256": "92234f6a5df21e67285c94e1d2be53a7cd8f2395e49b2a64dcc2e6b7d23e1daf",
+    "n": 93,
+    "n_geocoded": 83,
+    "license": "Geocoding results (c) OpenStreetMap contributors, ODbL"
+  },
+  {
+    "dataset_id": "era5_hourly_precip_open_meteo",
+    "city": "kolkata",
+    "path": "data/interim/kolkata/rain_era5_hourly.parquet",
+    "source_url": "https://archive-api.open-meteo.com/v1/archive",
+    "downloaded_utc": "2026-11-09T08:37:03+00:00",
+    "bytes": 2742721,
+    "sha256": "7e2697cba519ac2ea486dae49f37a98f8895a735b8103138e6018f5dbe545012",
+    "period": "2016-01-01/2026-10-31",
+    "nodes": 9,
+    "note": "ERA5 reanalysis (Copernicus C3S) served by Open-Meteo; hour = end of accumulation (UTC)"
+  },
+  {
+    "dataset_id": "esa_worldcover_2021",
+    "city": "kolkata",
+    "path": "data/raw/landcover/kolkata/esa_worldcover_2021_v200_utm10m.tif",
+    "source_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-worldcover",
+    "downloaded_utc": "2026-11-09T07:39:32+00:00",
+    "bytes": 1301844,
+    "sha256": "640bd2969b5d6f5052a1ded23f6672ba3d63127494104d94b0277fbfdff9e2f4",
+    "items": [
+      "ESA_WorldCover_10m_2021_v200_N21E087"
+    ]
+  },
+  {
+    "dataset_id": "ghs_pop_2020",
+    "city": "kolkata",
+    "path": "data/raw/population/kolkata/ghs_pop_e2020_r2023a_3ss.tif",
+    "source_url": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_4326_3ss/V1-0/tiles/",
+    "downloaded_utc": "2026-11-09T08:06:58+00:00",
+    "bytes": 926343,
+    "sha256": "a7138f37481f364ae071dde0650fcc5806199f24cd2e9b3b40e5d07afb9ffe02",
+    "tiles": [
+      "R7_C27"
+    ],
+    "note": "residential population per ~90 m cell (GHS-POP R2023A, epoch 2020); modelled, not census counts"
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2016.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:06:13+00:00",
+    "bytes": 25495560,
+    "sha256": "7d47dd937eb68d3e64e77f20d40597eeebb4d5329704857f604c4c4618dbf838",
+    "year": 2016
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2017.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:06:40+00:00",
+    "bytes": 25425900,
+    "sha256": "dc9109fc3c4c2dbcf8eea97114fa53a814ce677a8e64b567389f7d3da076c23a",
+    "year": 2017
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2018.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:06:53+00:00",
+    "bytes": 25425900,
+    "sha256": "78ae74184b0ece2a9a03bb16cca6f7361abcae1e772ce3e6d685110b2af18c33",
+    "year": 2018
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2019.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:00+00:00",
+    "bytes": 25425900,
+    "sha256": "dfb714184e16624cd43af8e932e3245c0d6cf1bacd9556e2cf44d962c9733f3f",
+    "year": 2019
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2020.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:08+00:00",
+    "bytes": 25495560,
+    "sha256": "e19532760221e68711132c98f05cc3ceb7b399e55dbe9bd35b02589bbf2e46ff",
+    "year": 2020
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2021.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:16+00:00",
+    "bytes": 25425900,
+    "sha256": "7f5128e82aa6d362b165898f7f5902d5edd12cb8265c71e2304f89053d5a2678",
+    "year": 2021
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2022.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:22+00:00",
+    "bytes": 25425900,
+    "sha256": "9cd1654631ed918f55fbe12e08ef7c0593019c4a3399e695f0b0398283fcbb3e",
+    "year": 2022
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2023.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:28+00:00",
+    "bytes": 25425900,
+    "sha256": "f308b916a4a2a57a66ce9d4987c60bb7756041434baed31f4342122dc3800ced",
+    "year": 2023
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2024.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:34+00:00",
+    "bytes": 25495560,
+    "sha256": "09d3c89a084f13f3ec534170ce9d98fafc6ff8c29b87d1c83cc2fcd82b495601",
+    "year": 2024
+  },
+  {
+    "dataset_id": "imd_rf25_daily",
+    "city": "india",
+    "path": "data/raw/rainfall/imd/imd_rf25_2025.grd",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:42+00:00",
+    "bytes": 25425900,
+    "sha256": "b4fa5ffb389496c0fa7d5a468d1cb47e4db0bcabcd11be4f273c0e6cfa7d611d",
+    "year": 2025
+  },
+  {
+    "dataset_id": "imd_rf25_daily_city_subset",
+    "city": "kolkata",
+    "path": "data/interim/kolkata/rain_imd_daily.nc",
+    "source_url": "https://imdpune.gov.in/cmpg/Griddata/rainfall.php",
+    "downloaded_utc": "2026-11-09T08:07:43+00:00",
+    "bytes": 190436,
+    "sha256": "640d408ea5f1a0cf638de9bb0811a4e4e45bbbe02ce56e9e68edf0ac3e0d8380",
+    "years": "2016-2025",
+    "cells": 12
+  },
+  {
+    "dataset_id": "jrc_gsw_occurrence",
+    "city": "kolkata",
+    "path": "data/raw/hydrology/kolkata/jrc_gsw_v1_4_occurrence_utm30m.tif",
+    "source_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/jrc-gsw",
+    "downloaded_utc": "2026-11-09T07:39:38+00:00",
+    "bytes": 110306,
+    "sha256": "ef347edf7130eb583ffca95407394c27d41b214874759aff59e4fe3ac5801daa",
+    "items": [
+      "80E_30Nv1_3_2020"
+    ]
+  },
+  {
+    "dataset_id": "jrc_gsw_seasonality",
+    "city": "kolkata",
+    "path": "data/raw/hydrology/kolkata/jrc_gsw_v1_4_seasonality_utm30m.tif",
+    "source_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/jrc-gsw",
+    "downloaded_utc": "2026-11-09T07:39:40+00:00",
+    "bytes": 52749,
+    "sha256": "4ff32a6d3118ea26da767b441b319c12020cee03826cd5c2cc847681e9b2ed64",
+    "items": [
+      "80E_30Nv1_3_2020"
+    ]
+  },
+  {
+    "dataset_id": "osm_buildings_centroids",
+    "city": "kolkata",
+    "path": "data/raw/infrastructure/kolkata/osm_buildings_centroids.parquet",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "downloaded_utc": "2026-11-09T08:06:33+00:00",
+    "bytes": 11338468,
+    "sha256": "ccf0104eeddb9c57e4afc6ed187bc4f3330510f81c413327b5c635ee4727c13f",
+    "n_features": 536020,
+    "license": "ODbL-1.0",
+    "query": "way[\"building\"](bbox);"
+  },
+  {
+    "dataset_id": "osm_critical_facilities",
+    "city": "kolkata",
+    "path": "data/raw/infrastructure/kolkata/osm_critical_facilities.parquet",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "downloaded_utc": "2026-11-09T08:10:31+00:00",
+    "bytes": 58870,
+    "sha256": "946a85bbfb21a0b7c62d8188cdd4f65c2dadc5c6d0197ad1bee1cab7eae2bb6b",
+    "n_features": 963,
+    "license": "ODbL-1.0",
+    "query": "(nwr[\"amenity\"~\"^(hospital|clinic|school|college|university|fire_station|police)$\"](bbox);nwr[\"emergency\"=\"ambulance_station\"](bbox););"
+  },
+  {
+    "dataset_id": "osm_roads",
+    "city": "kolkata",
+    "path": "data/raw/infrastructure/kolkata/osm_roads.parquet",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "downloaded_utc": "2026-11-09T08:07:40+00:00",
+    "bytes": 13745507,
+    "sha256": "48bf7de7c6de313fafb06cbc13eebed1a0e81657f01ee7fc46db386a666bd2b3",
+    "n_features": 101768,
+    "license": "ODbL-1.0",
+    "query": "way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|service|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$\"](bbox);"
+  },
+  {
+    "dataset_id": "osm_water_bodies",
+    "city": "kolkata",
+    "path": "data/raw/hydrology/kolkata/osm_water_bodies.parquet",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "downloaded_utc": "2026-11-09T08:09:38+00:00",
+    "bytes": 1530087,
+    "sha256": "563743360f3eb6bec4d274141aca15b8e9656426d6a1d00042ce89d873aa64a7",
+    "n_features": 6261,
+    "license": "ODbL-1.0",
+    "query": "(way[\"natural\"=\"water\"](bbox);way[\"landuse\"~\"^(reservoir|basin)$\"](bbox);way[\"water\"](bbox););"
+  },
+  {
+    "dataset_id": "osm_waterways",
+    "city": "kolkata",
+    "path": "data/raw/hydrology/kolkata/osm_waterways.parquet",
+    "source_url": "https://overpass-api.de/api/interpreter",
+    "downloaded_utc": "2026-11-09T08:08:39+00:00",
+    "bytes": 154965,
+    "sha256": "1736223612902163efc7b814db2c384fc766e3b89d40377321b77845f4c30a26",
+    "n_features": 431,
+    "license": "ODbL-1.0",
+    "query": "way[\"waterway\"~\"^(river|canal|drain|ditch|stream)$\"](bbox);"
+  },
+  {
+    "dataset_id": "sentinel1_rtc",
+    "city": "kolkata",
+    "path": "data/raw/satellite/sentinel1/kolkata/index.csv",
+    "source_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc",
+    "downloaded_utc": "2026-11-09T08:06:49+00:00",
+    "bytes": 90104,
+    "sha256": "02510e6121c868ee8111d043b941fcc5781a7f9331be6cbe5a7f7243e8e3562d",
+    "n_acquisitions": 472,
+    "months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "period": "2017-01-01/2025-12-31",
+    "grid_res_m": 25.0
+  }
+]

@@ -1,0 +1,102 @@
+{
+  "generated_utc": "2026-11-09T07:32:29.758017+00:00",
+  "cities": {
+    "kolkata": {
+      "bbox": [
+        88.2,
+        22.4,
+        88.5,
+        22.7
+      ],
+      "sentinel1_rtc": {
+        "total_scenes_2017_2025": 1252,
+        "monsoon_scenes_jun_oct": 523,
+        "monsoon_scenes_by_orbit": {
+          "descending-150": 189,
+          "descending-48": 227,
+          "ascending-12": 107
+        },
+        "years_covered": [
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ]
+      },
+      "terrain_copernicus_glo30": {
+        "dem_tiles": 1,
+        "elev_p5_m": 1.2035613059997559,
+        "elev_median_m": 5.507468223571777,
+        "elev_p95_m": 11.266096115112305,
+        "relief_p95_p5_m": 10.06253433227539
+      },
+      "openstreetmap_overpass": {
+        "building_ways": 498494,
+        "highway_ways": 92461,
+        "waterway_ways": 416,
+        "drain_ditch_canal_ways": 385,
+        "health_school_features": 749
+      },
+      "openalex_works": {
+        "Kolkata AND flood": 211,
+        "Kolkata AND waterlogging": 25,
+        "Kolkata AND flood AND susceptibility": 7,
+        "Kolkata AND flood AND machine learning": 11,
+        "Kolkata AND Sentinel-1 AND flood": 6
+      }
+    },
+    "mumbai": {
+      "bbox": [
+        72.77,
+        18.89,
+        73.0,
+        19.28
+      ],
+      "sentinel1_rtc": {
+        "total_scenes_2017_2025": 261,
+        "monsoon_scenes_jun_oct": 115,
+        "monsoon_scenes_by_orbit": {
+          "descending-34": 114,
+          "ascending-71": 1
+        },
+        "years_covered": [
+          2017,
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ]
+      },
+      "terrain_copernicus_glo30": {
+        "dem_tiles": 4,
+        "elev_p5_m": 0.0,
+        "elev_median_m": 4.832156181335449,
+        "elev_p95_m": 130.1881866455078,
+        "relief_p95_p5_m": 130.1881866455078
+      },
+      "openstreetmap_overpass": {
+        "building_ways": 116716,
+        "highway_ways": 74456,
+        "waterway_ways": 1100,
+        "drain_ditch_canal_ways": 747,
+        "health_school_features": 2290
+      },
+      "openalex_works": {
+        "Mumbai AND flood": 623,
+        "Mumbai AND waterlogging": 11,
+        "Mumbai AND flood AND susceptibility": 13,
+        "Mumbai AND flood AND machine learning": 27,
+        "Mumbai AND Sentinel-1 AND flood": 9
+      }
+    }
+  }
+}
