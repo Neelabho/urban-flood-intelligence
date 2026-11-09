@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import EChart, { AXIS } from '../components/EChart'
 import { Callout, Details, ErrorBox, Kind, Loading, PageHeader, Panel, Section, Stat } from '../components/ui'
@@ -87,7 +88,7 @@ export default function Live() {
                 <ul className="mt-2 space-y-2 text-[14px] leading-relaxed text-slate">
                   {BANDS.map((b) => <li key={b.label}><span className="mr-2 inline-block h-3 w-3 align-middle" style={{ background: b.color }} /><b>{b.label}.</b> {b.text}</li>)}
                 </ul>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-slate">These labels come from comparing rain with past days when the news reported flooded streets in Kolkata. They describe the city as a whole. To see which streets are most at risk, use the <a href="#/intelligence">map</a>.</p>
+                <p className="mt-3 text-[13.5px] leading-relaxed text-slate">These labels come from comparing rain with past days when the news reported flooded streets in Kolkata. They describe the city as a whole. To see which streets are most at risk, use the <Link to="/intelligence">map</Link>.</p>
               </div>
               <div className="border border-line bg-white p-5">
                 <div className="text-[16px] font-semibold">If heavy rain is coming</div>

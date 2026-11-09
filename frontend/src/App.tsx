@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import { Loading } from './components/ui'
 
@@ -14,10 +14,12 @@ const Observatory = lazy(() => import('./pages/Observatory'))
 const Methodology = lazy(() => import('./pages/Methodology'))
 const About = lazy(() => import('./pages/About'))
 
-// HashRouter: deep links work on static hosting (GitHub Pages) without server rewrites.
+// Clean URLs (/live/) so search engines can index every page. Each route is pre-rendered to its own
+// index.html at build time (scripts/prerender-routes.mjs), so static hosts serve them with HTTP 200.
+const BASENAME = import.meta.env.BASE_URL.replace(/\/$/, '')
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename={BASENAME}>
       <Suspense fallback={<Loading what="page" />}>
         <Routes>
           <Route element={<Layout />}>
@@ -35,6 +37,6 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
-    </HashRouter>
+    </BrowserRouter>
   )
 }

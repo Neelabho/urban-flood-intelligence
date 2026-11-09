@@ -25,6 +25,7 @@ jobs:
         working-directory: frontend
         env:
           VITE_BASE: /urban-flood-intelligence/
+          VITE_SITE_URL: https://neelabho.github.io/urban-flood-intelligence
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist

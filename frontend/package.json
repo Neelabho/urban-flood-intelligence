@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender-routes.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:api": "VITE_API_BASE=http://localhost:8000 vite --port 5174 --strictPort"

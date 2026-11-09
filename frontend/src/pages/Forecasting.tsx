@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useMemo, useState } from 'react'
 import EChart, { AXIS } from '../components/EChart'
 import { CI, Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Plain, Section, TechDetails, Timestamp } from '../components/ui'
@@ -105,7 +106,7 @@ export default function Forecasting() {
             </div>
           </div>
         )}
-        <p className="mt-4 text-[14px] text-slate">For the rain expected in the next few days, see <a href="#/live">Live Conditions</a>.</p>
+        <p className="mt-4 text-[14px] text-slate">For the rain expected in the next few days, see <Link to="/live">Live Conditions</Link>.</p>
       </Section>
 
       <TechDetails>

@@ -1,0 +1,17 @@
+{
+  "site_name": "Urban Flood Intelligence India",
+  "default_site_url": "https://neelabho.github.io/urban-flood-intelligence",
+  "author": "Neelabho Chakraborty",
+  "pages": {
+    "/": { "title": "Kolkata waterlogging map and rain risk | Urban Flood Intelligence India", "description": "See which parts of Kolkata fill with water after heavy rain, check today's rain, read about past floods and find out who is affected. Built from public maps, rainfall records and news reports." },
+    "/intelligence": { "title": "Kolkata waterlogging risk map | Urban Flood Intelligence India", "description": "Interactive map of waterlogging risk across Kolkata in 250 m squares. Click any spot to see how likely it is to flood after heavy rain and what you can do." },
+    "/live": { "title": "Will Kolkata flood today? Live rain and waterlogging outlook | UFII", "description": "Today's and the next few days' rain in Kolkata, explained in plain words, with whether it is the kind of rain that usually leaves streets under water." },
+    "/forecasting": { "title": "Can Kolkata waterlogging be forecast? | Urban Flood Intelligence India", "description": "What ten monsoons of rainfall records say about predicting street flooding in Kolkata, with a rain slider to test how risky different amounts of rain are." },
+    "/events": { "title": "Past floods in Kolkata, 1975 to 2026 | Urban Flood Intelligence India", "description": "A record of days when Kolkata's streets went under water, which places were hit, how much it rained, with links to the original news reports." },
+    "/exposure": { "title": "Who is affected by waterlogging in Kolkata? | Urban Flood Intelligence India", "description": "How many people, hospitals, schools and emergency services are in the parts of Kolkata that flood most often." },
+    "/research": { "title": "How accurate is the Kolkata waterlogging map? | Urban Flood Intelligence India", "description": "How the Kolkata waterlogging map was tested, how well it performs, where it does badly and what it cannot do." },
+    "/observatory": { "title": "Data sources for Kolkata flood research | Urban Flood Intelligence India", "description": "Every public dataset behind the Kolkata waterlogging map: satellites, rainfall, maps, population and news reports, with their weaknesses." },
+    "/methodology": { "title": "Methodology: machine learning for urban waterlogging in Kolkata | UFII", "description": "Technical methodology: data acquisition, geospatial processing, spatially validated machine-learning models, uncertainty and explainability for Kolkata waterlogging." },
+    "/about": { "title": "About Urban Flood Intelligence India", "description": "An open research project on street flooding in Indian cities, starting with Kolkata. Developed by Neelabho Chakraborty." }
+  }
+}

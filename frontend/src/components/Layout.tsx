@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useApiStatus, useStatic } from '../lib/data'
 import { drawnIntensity, prefersReducedMotion, rainLabel, setMotionMode, useLiveRain, useMotionMode, type MotionMode } from '../lib/motion'
 import WaterCanvas from './WaterCanvas'
+import SEO from '../seo-pages.json'
 import type { City } from '../lib/types'
 
 const NAV = [
@@ -24,6 +25,16 @@ export default function Layout() {
   const [open, setOpen] = useState(false)
   const loc = useLocation()
   useEffect(() => setOpen(false), [loc.pathname])
+  useEffect(() => {
+    // keep the tab title, description and canonical URL in step with the current page
+    const key = '/' + loc.pathname.split('/').filter(Boolean)[0]
+    const page = (SEO.pages as Record<string, { title: string; description: string }>)[key === '/undefined' ? '/' : key] ?? SEO.pages['/']
+    document.title = page.title
+    document.querySelector('meta[name="description"]')?.setAttribute('content', page.description)
+    const site = (import.meta.env.VITE_SITE_URL || SEO.default_site_url).replace(/\/$/, '')
+    const path = key === '/undefined' || key === '/' ? '/' : `${key}/`
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', site + path)
+  }, [loc.pathname])
   const pilot = cities.data?.cities.find((c) => c.status === 'pilot')
   const mode = useMotionMode()
   const rain = useLiveRain()
@@ -103,6 +114,9 @@ export default function Layout() {
           <div>
             Data: Copernicus, ESA, JRC, IMD, UCSB-CHC, ECMWF/Open-Meteo, © OpenStreetMap contributors. See Data Observatory.
           </div>
+        </div>
+        <div className="mx-auto mt-3 max-w-7xl border-t border-line pt-3 text-[13px] text-slate">
+          Developed by <a href="https://github.com/Neelabho" target="_blank" rel="noreferrer author" className="font-semibold">Neelabho Chakraborty</a>
         </div>
       </footer>
     </div>
