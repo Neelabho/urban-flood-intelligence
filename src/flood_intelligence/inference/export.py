@@ -232,7 +232,7 @@ def export_rainfall(city, out) -> None:
             "chirps_mean": [_f(ch.get(d)) for d in days], "era5_ist_day": [_f(eday.get(d)) for d in days],
             "era5_max1h": [_f(pr.loc[d, "era5_max1h"]) for d in days],
             "event": [int(pr.loc[d, "label"]) for d in days],
-            "p_loyo": [_f(pr.loc[d, "p_event_day_loyo"]) for d in days]}
+            "p_loyo": [None if pd.isna(pr.loc[d, "p_event_day_loyo"]) else round(float(pr.loc[d, "p_event_day_loyo"]), 4) for d in days]}
     _w(out / "rainfall_daily.json", {"generated_utc": NOW, "conventions": {
         "imd": "IMD day D = 08:30 IST D-1 to 08:30 IST D; mean/max over 0.25 deg cells covering the study area",
         "chirps": "UTC calendar day, mean over 0.05 deg cells", "era5": "IST calendar-day total at the wettest of 9 ERA5 nodes",

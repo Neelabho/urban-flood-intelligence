@@ -128,6 +128,10 @@ def lr():
     return make_pipeline(StandardScaler(), LogisticRegression(C=0.5, class_weight="balanced", max_iter=2000))
 
 
+def lr_unweighted():
+    return make_pipeline(StandardScaler(), LogisticRegression(C=0.5, max_iter=2000))
+
+
 def xgb():
     return XGBClassifier(n_estimators=150, max_depth=2, learning_rate=0.05, subsample=0.8, min_child_weight=1,
                          scale_pos_weight=40, eval_metric="aucpr", random_state=42, n_jobs=4)
@@ -202,7 +206,8 @@ def run(city_id: str = "kolkata") -> dict:
     final = lr().fit(D[era_cols], y)
     D_out = D.copy()
     D_out["p_event_day_insample"] = final.predict_proba(D[era_cols])[:, 1]
-    D_out["p_event_day_loyo"] = loyo(lr, D[era_cols], y, yrs)
+    # displayed probabilities: unweighted model (class weighting inflates absolute values); ranking is unchanged
+    D_out["p_event_day_loyo"] = loyo(lr_unweighted, D[era_cols], y, yrs)
 
     # ---- lead-time sensitivity (ERA5 information cut-off)
     lead = {}
@@ -238,7 +243,7 @@ def run(city_id: str = "kolkata") -> dict:
     res["scenario_curve"] = {"points": scen, "assumption": "max1h = 25%, max3h = 50%, max6h = 70% of the 48 h total; "
                                                           "antecedent 72 h at its median. Simulated scenario.",
                              "note": "unweighted logistic regression fitted on all seasons: probability that a day "
-                                     "is a *documented* waterlogging day (lower bound; many events go unreported)"}
+                                     "is a documented waterlogging day (lower bound; many events go unreported)"}
     res["coefficients_standardized"] = {k: float(v) for k, v in coefs.items()}
     sc_, lr_ = final.named_steps["standardscaler"], final.named_steps["logisticregression"]
     res["live_model"] = {"features": era_cols, "mean": sc_.mean_.tolist(), "scale": sc_.scale_.tolist(),
