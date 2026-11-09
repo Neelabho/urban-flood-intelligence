@@ -79,6 +79,35 @@ tests/                    data, geospatial, ML and API tests
 
 Raw/interim/processed data and model binaries are **not** committed; scripts regenerate them.
 
+### Where to find the machine learning and the data on GitHub
+
+| What | Where |
+|---|---|
+| Susceptibility models (LR, tree, RF, XGBoost, LightGBM, SVM, baselines, validation, SHAP, uncertainty) | [`src/flood_intelligence/models/susceptibility.py`](src/flood_intelligence/models/susceptibility.py) |
+| PyTorch MLP comparator | [`src/flood_intelligence/models/deep_tabular.py`](src/flood_intelligence/models/deep_tabular.py) |
+| Event-day rainfall model and lead-time experiment | [`src/flood_intelligence/models/dynamic.py`](src/flood_intelligence/models/dynamic.py) |
+| Feature engineering and labels/splits | [`src/flood_intelligence/features/`](src/flood_intelligence/features/) |
+| Imputation study, SAR water detection | [`src/flood_intelligence/preprocessing/`](src/flood_intelligence/preprocessing/) |
+| Metrics and bootstrap CIs | [`src/flood_intelligence/evaluation/metrics.py`](src/flood_intelligence/evaluation/metrics.py) |
+| Every experiment's settings and results | [`experiments/`](experiments/) |
+| Data download code (one module per source) | [`src/flood_intelligence/ingestion/`](src/flood_intelligence/ingestion/) |
+| Dataset catalogue, download log, quality report | [`data/metadata/`](data/metadata/) |
+| Documented waterlogging reports (our compiled labels) | [`data/raw/flood_observations/kolkata/`](data/raw/flood_observations/kolkata/) |
+| Results used by the website | [`frontend/public/data/kolkata/`](frontend/public/data/kolkata/) |
+| **Trained model file and processed datasets** | [Release v0.1.0](https://github.com/Neelabho/urban-flood-intelligence/releases/tag/v0.1.0) (`.joblib` model, bootstrap ensemble, processed Parquet tables, experiment records) |
+
+The raw downloads (~1.8 GB of satellite images, rainfall grids and map extracts) are not stored on GitHub: they are too
+large, several licences do not allow redistribution, and `scripts/run_pipeline.sh` re-downloads them from the original
+providers.
+
+## Publishing the website
+
+The site is a static build (`npm run build` in `frontend/`) with clean page addresses, per-page titles and
+descriptions, a sitemap and robots.txt, so it can be hosted anywhere and indexed by search engines. See
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the step-by-step guide, including Google Search Console.
+
+Developed by **Neelabho Chakraborty**.
+
 ## Claims and non-claims
 
 **Can be claimed:** the measured results above for Kolkata under the stated designs; the SAR negative result for this
