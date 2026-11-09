@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useApiStatus, useStatic } from '../lib/data'
+import { drawnIntensity, prefersReducedMotion, rainLabel, setMotionMode, useLiveRain, useMotionMode, type MotionMode } from '../lib/motion'
+import WaterCanvas from './WaterCanvas'
 import type { City } from '../lib/types'
 
 const NAV = [
@@ -23,8 +25,15 @@ export default function Layout() {
   const loc = useLocation()
   useEffect(() => setOpen(false), [loc.pathname])
   const pilot = cities.data?.cities.find((c) => c.status === 'pilot')
+  const mode = useMotionMode()
+  const rain = useLiveRain()
+  const reduced = prefersReducedMotion()
+  const animate = mode !== 'off' && !reduced
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="relative flex min-h-full flex-col">
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        <WaterCanvas variant="light" intensity={drawnIntensity(mode, rain)} animate={animate} />
+      </div>
       <header className="sticky top-0 z-30 bg-ink text-paper">
         <div className="flex items-center gap-4 px-4 py-2.5 md:px-6">
           <NavLink to="/" className="flex items-center gap-2.5 text-paper no-underline hover:no-underline">
@@ -72,10 +81,20 @@ export default function Layout() {
           </ul>
         </nav>
       </header>
-      <main className="flex-1">
+      <main className="relative z-10 flex-1">
         <Outlet />
       </main>
-      <footer className="border-t border-line bg-paper-2 px-4 py-5 text-[12px] text-mute md:px-8">
+      <footer className="relative z-10 border-t border-line bg-paper-2/90 px-4 py-5 text-[12px] text-mute md:px-8">
+        <div className="mx-auto mb-3 flex max-w-7xl flex-wrap items-center gap-2 border-b border-line pb-3">
+          <span className="text-slate">Background animation:</span>
+          {([['live', 'Live rain'], ['preview', 'Preview heavy rain'], ['off', 'Off']] as [MotionMode, string][]).map(([m, l]) => (
+            <button key={m} onClick={() => setMotionMode(m)} aria-pressed={mode === m}
+              className={`border px-2 py-0.5 ${mode === m ? 'border-ink bg-ink text-paper' : 'border-line bg-white text-slate hover:border-ink'}`}>{l}</button>
+          ))}
+          <span className="text-mute">
+            {reduced ? 'Paused because your device asks for reduced motion.' : mode === 'live' ? `The rain in the background matches the real weather: ${rainLabel(rain.mmPerHour)}. Move or click to make ripples.` : mode === 'preview' ? 'Showing what heavy rain looks like. This is not the real weather.' : 'Animation is off.'}
+          </span>
+        </div>
         <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-3">
           <div>
             Research prototype. Not an official warning service. Follow{' '}

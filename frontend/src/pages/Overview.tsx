@@ -4,6 +4,8 @@ import maplibregl, { type Map as MLMap } from 'maplibre-gl'
 import MapCanvas from '../components/MapCanvas'
 import { LEVELS, Loading, Section } from '../components/ui'
 import { useStatic } from '../lib/data'
+import { drawnIntensity, prefersReducedMotion, useLiveRain, useMotionMode } from '../lib/motion'
+import WaterCanvas from '../components/WaterCanvas'
 import type { City } from '../lib/types'
 
 const STATUS: Record<City['status'], { color: string; label: string }> = {
@@ -36,6 +38,8 @@ const TIPS = [
 
 export default function Overview() {
   const cities = useStatic<{ cities: City[] }>('cities.json')
+  const mode = useMotionMode()
+  const rain = useLiveRain()
 
   const onReady = useCallback((m: MLMap) => {
     for (const c of cities.data?.cities ?? []) {
@@ -49,8 +53,9 @@ export default function Overview() {
 
   return (
     <div>
-      <section className="border-b border-line bg-ink text-paper">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:px-8 lg:grid-cols-[1.15fr_1fr]">
+      <section className="relative overflow-hidden border-b border-line bg-ink text-paper">
+        <WaterCanvas variant="dark" intensity={drawnIntensity(mode, rain)} animate={mode !== 'off' && !prefersReducedMotion()} waveHeight={0.22} />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-8 px-4 py-10 md:px-8 lg:grid-cols-[1.15fr_1fr]">
           <div>
             <div className="text-[12px] font-semibold uppercase tracking-[0.14em] text-amber">Kolkata · monsoon waterlogging</div>
             <h1 className="h-serif mt-3 text-3xl font-semibold leading-tight md:text-[40px]">Which parts of Kolkata fill with water when it rains heavily?</h1>

@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 
 export function PageHeader({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
   return (
-    <header className="border-b border-line bg-paper px-4 py-6 md:px-8">
+    <header className="border-b border-line bg-paper/55 px-4 py-6 md:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="eyebrow">{eyebrow}</div>
         <h1 className="h-serif mt-1 text-2xl font-semibold text-ink md:text-[28px]">{title}</h1>
