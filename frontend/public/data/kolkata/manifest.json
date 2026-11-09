@@ -1,1 +1,1 @@
-{"generated_utc":"2026-11-09T09:22:08+00:00","files":{"data_quality.json":34787,"models.json":176454,"events.json":142949,"grid.json":4412799,"exposure.json":132089,"manifest.json":273,"localities.geojson":40614,"rainfall_daily.json":89449},"pipeline_git_commit":"5dc91c0"}
+{"generated_utc":"2026-11-09T19:01:52+00:00","files":{"data_quality.json":34787,"models.json":176454,"events.json":142949,"grid.json":4412799,"exposure.json":131757,"manifest.json":273,"localities.geojson":40614,"rainfall_daily.json":89449},"pipeline_git_commit":"00aee19"}

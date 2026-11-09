@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import EChart, { AXIS } from '../components/EChart'
-import { Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Section, Stat, Timestamp } from '../components/ui'
+import { Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Plain, Section, Stat, TechDetails, Timestamp } from '../components/ui'
 import { fmt, useStatic } from '../lib/data'
 
 type Cat = { id: string; title: string; provider: string; url: string; license: string; period: string; temporal_resolution: string; spatial_resolution: string; crs: string; format: string; nature: string; used_for: string; limitations: string; downloads: { path: string; downloaded_utc: string; bytes: number | null; sha256: string | null }[] }
@@ -33,10 +33,34 @@ export default function Observatory() {
   const f = q.data.feasibility
   return (
     <div>
-      <PageHeader eyebrow="Data observatory" title="Sources, provenance, quality and missingness">
-        Every dataset used, where it came from, when it was downloaded, what it is (observed, derived, modelled or reported) and what is wrong with it.
-        <div className="mt-1"><Timestamp iso={q.data.generated_utc} /></div>
+      <PageHeader eyebrow="Data observatory" title="Where our information comes from">
+        Everything on this website is built from public information. Here is what we used, in plain words, and what its weak spots are.
+        <div className="mt-1"><Timestamp iso={q.data.generated_utc} label="Last updated" /></div>
       </PageHeader>
+      <Section>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Plain title="What we used">
+            <ul className="space-y-2">
+              <li><b>Past floods:</b> news reports that named flooded streets, and India's national record of flood disasters.</li>
+              <li><b>Rain:</b> rain gauges run by the India Meteorological Department, rain estimated from satellites, and rain from global weather models.</li>
+              <li><b>Land and buildings:</b> satellite maps of ground and building height, maps of what covers the ground (buildings, trees, water, fields), radar satellite images, and OpenStreetMap, the free map anyone can edit.</li>
+              <li><b>People:</b> population estimates from the European Commission, based on the census and where buildings are.</li>
+            </ul>
+          </Plain>
+          <Plain title="Weak spots to keep in mind">
+            <ul className="list-disc space-y-2 pl-5">
+              <li>News covers some places more than others, so less-reported areas may look safer than they are.</li>
+              <li>The height maps include buildings, so they cannot show the true street level in dense areas.</li>
+              <li>Rain gauges are far apart. On 23 September 2025, two neighbouring gauge squares showed 224 mm and 3 mm.</li>
+              <li>Satellite rain estimates badly underestimated that same storm.</li>
+              <li>For about 1 in 20 squares, part of the land-height information was missing and had to be estimated.</li>
+              <li>Drains, pumps and sewers are not on any public map, so they are left out.</li>
+            </ul>
+          </Plain>
+        </div>
+      </Section>
+
+      <TechDetails title="How did we get this? (full catalogue and quality checks)">
       <Section>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <Stat label="Datasets" value={q.data.catalog.length} />
@@ -89,7 +113,7 @@ export default function Observatory() {
               series: [{ name: 'random 10% mask', type: 'bar', data: methods.map((m) => imp.random[m].hand_mean_rmse_mean), itemStyle: { color: '#a9c1d3' } },
                 { name: 'spatial-block 10% mask', type: 'bar', data: methods.map((m) => imp.spatial_block[m].hand_mean_rmse_mean), itemStyle: { color: '#0f1b2d' } }],
             }} />
-            <p className="text-[12px] text-slate">Selected: <b>{Qd.imputation.selected}</b> — {Qd.imputation.rule}.</p>
+            <p className="text-[12px] text-slate">Selected: <b>{Qd.imputation.selected}</b>, {Qd.imputation.rule}.</p>
           </Panel>
           <Panel title="Mechanism and safeguards">
             <p className="text-[12.5px] leading-relaxed text-slate">{Qd.static_features.hand_missingness.interpretation} Missing cells have a missing neighbour {fmt.pct(Qd.static_features.hand_missingness.hand_missing_neighbour_share, 0)} of the time versus {fmt.pct(Qd.static_features.hand_missingness.hand_missing_neighbour_expected_if_random, 0)} expected if random.</p>
@@ -149,11 +173,12 @@ export default function Observatory() {
       <Section kicker="Provenance" title="Download manifest">
         <div className="max-h-[360px] overflow-y-auto border border-line bg-white">
           <table className="data"><thead><tr><th>Dataset</th><th>Local path</th><th>Downloaded (UTC)</th><th className="text-right">Size</th></tr></thead>
-            <tbody>{q.data.manifest.map((m) => <tr key={m.dataset_id + m.path}><td className="text-[12px]">{m.dataset_id}</td><td className="num text-[11px]">{m.path}</td><td className="num text-[11px]">{m.downloaded_utc}</td><td className="num text-right text-[11px]">{m.bytes ? fmt.n(m.bytes / 1e6, 2) + ' MB' : '—'}</td></tr>)}</tbody>
+            <tbody>{q.data.manifest.map((m) => <tr key={m.dataset_id + m.path}><td className="text-[12px]">{m.dataset_id}</td><td className="num text-[11px]">{m.path}</td><td className="num text-[11px]">{m.downloaded_utc}</td><td className="num text-right text-[11px]">{m.bytes ? fmt.n(m.bytes / 1e6, 2) + ' MB' : 'n/a'}</td></tr>)}</tbody>
           </table>
         </div>
-        <p className="mt-2 text-[11.5px] text-mute">Raw files are not redistributed; scripts in <code>src/flood_intelligence/ingestion</code> re-acquire them. OSM building counts: {fmt.pct(Qd.osm.buildings_mapped_cells_share, 0)} of cells contain mapped buildings — {Qd.osm.note}.</p>
+        <p className="mt-2 text-[11.5px] text-mute">Raw files are not redistributed; scripts in <code>src/flood_intelligence/ingestion</code> re-acquire them. OSM building counts: {fmt.pct(Qd.osm.buildings_mapped_cells_share, 0)} of cells contain mapped buildings. {Qd.osm.note}.</p>
       </Section>
+      </TechDetails>
     </div>
   )
 }

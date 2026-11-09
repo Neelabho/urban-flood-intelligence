@@ -19,7 +19,7 @@ export function fetchJson<T>(url: string): Promise<T> {
     cache.set(
       url,
       fetch(url).then((r) => {
-        if (!r.ok) throw new Error(`${r.status} ${r.statusText} — ${url}`)
+        if (!r.ok) throw new Error(`${r.status} ${r.statusText}: ${url}`)
         return r.json()
       }).catch((e) => {
         cache.delete(url)
@@ -67,8 +67,8 @@ export function useApiStatus(): ApiStatus {
 
 export const fmt = {
   n: (v: number | null | undefined, d = 0) =>
-    v === null || v === undefined || Number.isNaN(v) ? '—' : v.toLocaleString('en-IN', { maximumFractionDigits: d, minimumFractionDigits: d }),
-  pct: (v: number | null | undefined, d = 1) => (v === null || v === undefined ? '—' : `${(v * 100).toFixed(d)}%`),
+    v === null || v === undefined || Number.isNaN(v) ? 'n/a' : v.toLocaleString('en-IN', { maximumFractionDigits: d, minimumFractionDigits: d }),
+  pct: (v: number | null | undefined, d = 1) => (v === null || v === undefined ? 'n/a' : `${(v * 100).toFixed(d)}%`),
   date: (s: string) => new Date(s + (s.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
   ts: (s: string) => new Date(s).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }),
 }

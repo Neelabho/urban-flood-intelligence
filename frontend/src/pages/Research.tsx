@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import EChart, { AXIS, PALETTE } from '../components/EChart'
-import { CI, Callout, ErrorBox, Loading, PageHeader, Panel, Section, Timestamp } from '../components/ui'
+import { CI, Callout, ErrorBox, Loading, PageHeader, Panel, Plain, Section, TechDetails, Timestamp } from '../components/ui'
 import { fmt, useStatic } from '../lib/data'
 import type { Curves, Score } from '../lib/types'
 
@@ -35,13 +35,45 @@ export default function Research() {
   const abl = Object.entries(S.ablation)
   return (
     <div>
-      <PageHeader eyebrow="Research & models" title="Experimental results">
-        All numbers are produced by the scripts in <code>src/flood_intelligence/models</code> and logged in <code>experiments/</code>. Positives are 250 m cells
-        containing documented waterlogging localities; background is other urban cells. Because this is a presence/background design, scores rank cells
-        <em> relatively</em>; PR-AUC must be read against the prevalence ({fmt.pct(S.models.xgboost.spatial_cv.prevalence, 2)}).
+      <PageHeader eyebrow="Research & models" title="How good is the map?">
+        We tested the map the way you would test a student: by hiding some answers and checking whether it could still find them.
         <div className="mt-1"><Timestamp iso={m.data.generated_utc} /></div>
       </PageHeader>
+      <Section>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Plain title="The test">
+            <p>We hid whole neighbourhoods from the map while building it, then asked it to rate them. If you pick one spot that the news reported
+              as flooded and one ordinary spot, the map rated the flooded one as riskier <b>about {Math.round(ho.roc_auc * 100)} times out of 100</b>.</p>
+            <p className="mt-3">We also built the map only from floods reported up to 2024 and checked it against places that first flooded in 2025 and 2026.
+              It still picked the flooded place <b>about {Math.round(S.spatiotemporal.all_later_localities.roc_auc * 100)} times out of 100</b>.</p>
+            <p className="mt-3 text-[14px] text-slate">A coin toss would score 50. A perfect map would score 100.</p>
+          </Plain>
+          <Plain title="What seems to matter most">
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li>Tightly packed buildings and lots of paved roads, as in the old city centre.</li>
+              <li>Tall buildings close together, which show up as a very uneven surface in height maps.</li>
+              <li>How far a spot is from canals and open drains.</li>
+              <li>Trees and green space, which go with less flooding.</li>
+            </ul>
+            <p className="mt-3 text-[14px] text-slate">These are patterns the map found, not proven causes. Kolkata is very flat, so the height of the land on its own told us little.</p>
+          </Plain>
+          <Plain title="Where it does badly">
+            <p>It underrates newer parts of the city that also flood, such as Sarsuna, Behala and Joka in the south and Salt Lake in the east. Their
+              streets look different from the old centre, and their flooding has different causes, such as overflowing canals and drains that were
+              never planned when these wards joined the city.</p>
+          </Plain>
+          <Plain title="What it cannot do">
+            <ul className="list-disc space-y-1.5 pl-5">
+              <li>Say exactly when a street will flood. It shows which places flood more often.</li>
+              <li>See areas that flood but never made the news. They may look safer than they are.</li>
+              <li>Account for drains and pumps, because that information is not public.</li>
+              <li>Be used for other cities. It was built and tested only for Kolkata.</li>
+            </ul>
+          </Plain>
+        </div>
+      </Section>
 
+      <TechDetails title="How did we get this? (full results)">
       <Section kicker="Module A · susceptibility" title="Model comparison under spatial cross-validation">
         <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr]">
           <Panel title={`Grouped 5-fold CV on 2 km blocks · train split (${ds.n_train_pos} positives / ${ds.n_train} cells)`}>
@@ -53,7 +85,7 @@ export default function Research() {
                     <tr key={k}><td className={k === S.selection.best_by_spatial_cv_pr_auc ? 'font-semibold' : ''}>{NAME[k] ?? k}</td>
                       <td className="num text-right">{v.spatial_cv.roc_auc.toFixed(3)}<CI ci={v.spatial_cv.ci95_block_bootstrap?.roc_auc} /></td>
                       <td className="num text-right">{v.spatial_cv.pr_auc.toFixed(3)}</td><td className="num text-right">{v.spatial_cv.pr_auc_lift.toFixed(1)}×</td>
-                      <td className="num text-right">{v.spatial_cv.brier?.toFixed(4) ?? '—'}</td><td className="num text-right">{v.spatial_cv.recall.toFixed(2)}</td>
+                      <td className="num text-right">{v.spatial_cv.brier?.toFixed(4) ?? 'n/a'}</td><td className="num text-right">{v.spatial_cv.recall.toFixed(2)}</td>
                       <td className="num text-right">{v.spatial_cv.precision.toFixed(2)}</td><td className="num text-right">{v.spatial_cv.balanced_accuracy.toFixed(2)}</td></tr>
                   ))}
                   {Object.entries(S.baselines).map(([k, v]) => (
@@ -178,7 +210,7 @@ export default function Research() {
             <li><b>Reporting bias.</b> Positives come from news reports that favour central, arterial and newsworthy places. Target-group background sampling (urban cells only) reduces but cannot remove this; part of the skill may reflect where journalists report.</li>
             <li><b>Positional uncertainty.</b> Localities are geocoded to points (median uncertainty ~100 m, up to 2 km for neighbourhoods); a 500 m buffer around positives is excluded from background.</li>
             <li><b>Surface model, not terrain.</b> Without a building-removed DEM, "terrain" features conflate topography and urban form. Feature importance is not causal.</li>
-            <li><b>No drainage network.</b> Kolkata's underground storm-drain and pumping data are not public; drainage capacity — a first-order control — is absent from the model.</li>
+            <li><b>No drainage network.</b> Kolkata's underground storm-drain and pumping data are not public; drainage capacity, a first-order control, is absent from the model.</li>
             <li><b>Small samples.</b> 75 positive cells and 24 event days. Confidence intervals are wide; differences between top models are not significant.</li>
             <li><b>No cross-city claim.</b> Nothing here has been tested outside Kolkata.</li>
           </ul>
@@ -192,6 +224,7 @@ export default function Research() {
           </table>
         </div>
       </Section>
+      </TechDetails>
     </div>
   )
 }

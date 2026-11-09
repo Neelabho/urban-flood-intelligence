@@ -54,7 +54,10 @@ ROLES = ["background", "positive", "excluded_buffer", "excluded_nonurban"]
 
 def _w(path, obj) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, separators=(",", ":"), default=_default, allow_nan=False))
+    txt = json.dumps(obj, separators=(",", ":"), default=_default, allow_nan=False, ensure_ascii=False)
+    # display normalisation: the site uses no em dashes (e.g. bilingual OSM names "English \u2014 Bengali")
+    txt = txt.replace(" \u2014 ", " / ").replace("\u2014", "-")
+    path.write_text(txt, encoding="utf-8")
 
 
 def _default(o):

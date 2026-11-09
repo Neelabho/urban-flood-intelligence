@@ -1,4 +1,76 @@
-import { Callout, Kind, PageHeader, Section } from '../components/ui'
+import { Link } from 'react-router-dom'
+import { Callout, Kind, Loading, PageHeader, Panel, Section, Stat, Timestamp } from '../components/ui'
+import { fmt, useStatic } from '../lib/data'
+import type { Score } from '../lib/types'
+
+type Models = {
+  generated_utc: string
+  susceptibility: { models: Record<string, { spatial_cv: Score }>; holdout_test: Record<string, Score>; spatiotemporal: Record<string, Score> }
+  susceptibility_design: Record<string, number>
+  dynamic: { product_comparison: { results: Record<string, { logistic_loyo: Score }> }; lead_time: Record<string, Score> }
+}
+type Quality = { generated_utc: string; catalog: unknown[]; manifest_summary: { n_artifacts: number; total_bytes: number }; feasibility: { weighted_totals_base: Record<string, number>; decision: string } }
+
+function TechnicalSummary() {
+  const models = useStatic<Models>('kolkata/models.json')
+  const quality = useStatic<Quality>('kolkata/data_quality.json')
+  const m = models.data
+  const sd = m?.susceptibility_design
+  if (!m) return <Loading />
+  const best = Object.entries(m.susceptibility.models).sort((a, b) => b[1].spatial_cv.roc_auc - a[1].spatial_cv.roc_auc)[0]
+  return (
+    <>
+      <Section kicker="Pilot city" title="Data coverage and validation status">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <Panel title="Data coverage" note={<Timestamp iso={quality.data?.generated_utc} />}>
+            <div className="grid grid-cols-2 gap-4">
+              <Stat label="Analysis grid" value="16,875" sub="250 m cells, UTM 45N" />
+              <Stat label="Datasets" value={quality.data?.catalog.length ?? 'n/a'} sub="verified public sources" />
+              <Stat label="Sentinel-1 scenes" value="472" sub="2017 to 2025, May to Nov" />
+              <Stat label="Downloaded artefacts" value={quality.data?.manifest_summary.n_artifacts ?? 'n/a'} sub={quality.data ? `${fmt.n(quality.data.manifest_summary.total_bytes / 1e6, 0)} MB, provenance logged` : ''} />
+            </div>
+          </Panel>
+          <Panel title="Observations">
+            <div className="grid grid-cols-2 gap-4">
+              <Stat label="Positive cells" value={sd?.n_positive_cells ?? 'n/a'} sub="83 geocoded localities" />
+              <Stat label="Event days" value="24" sub="2016 to 2026 monsoons" />
+              <Stat label="Background cells" value={fmt.n(sd?.n_background_cells)} sub="urban, unlabelled" />
+              <Stat label="Held-out positives" value={sd?.test_pos ?? 'n/a'} sub="untouched test blocks" />
+            </div>
+          </Panel>
+          <Panel title="Model validation status">
+            <table className="data"><tbody>
+              <tr><td>Susceptibility, spatial CV (best)</td><td className="num text-right">ROC-AUC {best[1].spatial_cv.roc_auc.toFixed(2)}</td></tr>
+              <tr><td>Susceptibility, held-out blocks</td><td className="num text-right">{m.susceptibility.holdout_test.xgboost.roc_auc.toFixed(2)} (n+={m.susceptibility.holdout_test.xgboost.n_pos})</td></tr>
+              <tr><td>Later-documented localities</td><td className="num text-right">{m.susceptibility.spatiotemporal.all_later_localities.roc_auc.toFixed(2)}</td></tr>
+              <tr><td>Event-day model, LOSO CV (IMD)</td><td className="num text-right">{m.dynamic.product_comparison.results.imd_gauge.logistic_loyo.roc_auc.toFixed(2)}</td></tr>
+              <tr><td>24 h information cut-off</td><td className="num text-right text-orange">{m.dynamic.lead_time['24h'].roc_auc.toFixed(2)}</td></tr>
+              <tr><td>Hourly flood forecasting</td><td className="text-right text-orange">not supported by data</td></tr>
+            </tbody></table>
+          </Panel>
+        </div>
+      </Section>
+      <Section kicker="Technical findings" title="Key results with caveats">
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Callout><b>Sentinel-1 cannot label Kolkata's street waterlogging.</b> Across 258 same-orbit pairs, new open water in built-up cells averaged 0.003% and was slightly anti-correlated with rainfall (Spearman rho = -0.21). SAR is used only as a feature.</Callout>
+          <Callout><b>A bare-terrain index fails; learned models rank documented localities well.</b> HAND/TWI/depression index ROC-AUC 0.40; models combining DSM texture, drainage proximity and land cover reach 0.84 to 0.90 under 2 km block CV. DSM "terrain" partly encodes building form.</Callout>
+          <Callout><b>Rainfall products are statistically indistinguishable for event days.</b> IMD, CHIRPS and ERA5 give ROC-AUC 0.88 to 0.91 with overlapping year-bootstrap CIs.</Callout>
+          <Callout tone="warn"><b>Skill is a same-day phenomenon.</b> Withholding the last 24 h of rainfall drops ROC-AUC to 0.57; at 48 h it is below chance.</Callout>
+        </div>
+      </Section>
+      {quality.data?.feasibility && (
+        <Section kicker="Pilot selection" title="Why Kolkata first">
+          <Panel>
+            <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+              <div className="space-y-3">{Object.entries(quality.data.feasibility.weighted_totals_base).map(([c, v]) => <Stat key={c} label={c} value={v.toFixed(2)} sub="weighted score / 10" />)}</div>
+              <p className="text-[13.5px] leading-relaxed text-slate">{quality.data.feasibility.decision} <Link to="/observatory">Full scoring and sensitivity in the Data Observatory.</Link></p>
+            </div>
+          </Panel>
+        </Section>
+      )}
+    </>
+  )
+}
 
 const STEPS: [string, string, string[]][] = [
   ['Data acquisition', 'Scripted, logged downloads of public data', ['Sentinel-1 RTC (472 acquisitions)', 'Copernicus GLO-30, WorldCover, JRC GSW, GHS-POP', 'OSM via Overpass', 'IMD, CHIRPS, ERA5, IMERG windows', 'Cited waterlogging reports, India Flood Inventory']],
@@ -17,6 +89,7 @@ export default function Methodology() {
       <PageHeader eyebrow="Methodology" title="From public data to a defensible susceptibility estimate">
         The scientific pipeline, the definitions that keep different kinds of numbers apart, and the decisions forced by the data.
       </PageHeader>
+      <TechnicalSummary />
       <Section kicker="Pipeline" title="Eight stages">
         <div className="grid gap-0 overflow-hidden border border-line bg-white sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(([t, s, items], i) => (
@@ -51,13 +124,13 @@ export default function Methodology() {
             per-orbit pairs, Otsu thresholds bounded to physical ranges, JRC permanent-water mask) and tested it before using it. In built-up cells newly detected open water was
             essentially zero and slightly anti-correlated with rainfall; Otsu thresholds never fell inside physical bounds because water is a tiny share of the scene; and
             post-cyclone changes reflected tree damage, not standing water. This is consistent with known C-band limitations in dense urban areas (Mason et al. 2014) and with
-            Kolkata's waterlogging typically draining within hours — far shorter than the 6–12 day revisit.</p>
+            Kolkata's waterlogging typically draining within hours, far shorter than the 6–12 day revisit.</p>
           <p>Labels therefore come from <b>documented waterlogging reports</b>: 132 locality mentions across 14 dated events (2021–2026) from accessible news archives, each row
             carrying its URL, publication time and date basis, geocoded with OSM Nominatim and audited by hand. City-level reports and India Flood Inventory entries add event
             dates for the temporal model.</p>
           <h3>Presence/background design and reporting bias</h3>
           <p>Because absence of a report is not absence of flooding, unlabelled cells are treated as <i>background</i>, not negatives. Background is restricted to urban cells
-            (built-up ≥ 25%) — a target-group background that mirrors where reports can occur — and a 500 m ring around each positive is excluded to absorb geocoding error.
+            (built-up ≥ 25%), a target-group background that mirrors where reports can occur, and a 500 m ring around each positive is excluded to absorb geocoding error.
             Scores are interpreted as relative rankings.</p>
           <h3>Validation</h3>
           <p>Grouped 5-fold cross-validation on 2 km blocks within a training split; 20% of blocks (16 positives) never touched during model selection; a spatio-temporal test on
@@ -73,7 +146,7 @@ export default function Methodology() {
           <h3>Why no deep spatiotemporal model</h3>
           <p>ConvLSTM, graph networks and transformers need many labelled space-time samples. With 75 positive cells and 24 event days, they would memorise noise. A small MLP is
             reported as an "advanced" comparator on identical folds: its PR-AUC point estimate is the highest (0.21) but its ROC-AUC is lower
-            (0.86 vs 0.90 for random forest), and all differences sit inside the bootstrap intervals — no model is clearly superior.</p>
+            (0.86 vs 0.90 for random forest), and all differences sit inside the bootstrap intervals: no model is clearly superior.</p>
         </div>
       </Section>
       <Section kicker="Geospatial" title="Grid and coordinate reference">

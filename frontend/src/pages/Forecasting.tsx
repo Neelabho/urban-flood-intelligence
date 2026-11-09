@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import EChart, { AXIS } from '../components/EChart'
-import { CI, Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Section, Timestamp } from '../components/ui'
+import { CI, Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Plain, Section, TechDetails, Timestamp } from '../components/ui'
 import { fmt, useStatic } from '../lib/data'
 import type { Curves, Score } from '../lib/types'
-import { predictLive } from '../lib/model'
+import { band, predictLive, rainWords } from '../lib/model'
 
 type Rain = { generated_utc: string; conventions: Record<string, string>; date: string[]; imd_mean: (number | null)[]; imd_max: (number | null)[]; chirps_mean: (number | null)[]; era5_ist_day: (number | null)[]; era5_max1h: (number | null)[]; event: number[]; p_loyo: (number | null)[] }
 type Dyn = {
@@ -48,7 +48,7 @@ export default function Forecasting() {
         { name: 'IMD max cell (gauge)', type: 'bar', data: pick(R.imd_max), itemStyle: { color: '#0f1b2d' }, barGap: '0%', markLine: { symbol: 'none', label: { show: false }, lineStyle: { color: '#a8322d', type: 'solid', width: 1.2 }, data: evMarks } },
         { name: 'CHIRPS mean (satellite)', type: 'bar', data: pick(R.chirps_mean), itemStyle: { color: '#d9a441' } },
         { name: 'ERA5 day (reanalysis)', type: 'bar', data: pick(R.era5_ist_day), itemStyle: { color: '#3d6a8e' } },
-        { name: 'P(documented event day) — out-of-season CV', type: 'line', yAxisIndex: 1, data: pick(R.p_loyo), showSymbol: false, lineStyle: { color: '#d9762b', width: 1.6 } },
+        { name: 'P(documented event day), out-of-season CV', type: 'line', yAxisIndex: 1, data: pick(R.p_loyo), showSymbol: false, lineStyle: { color: '#d9762b', width: 1.6 } },
       ],
     }
   }, [rain.data, year])
@@ -59,12 +59,56 @@ export default function Forecasting() {
 
   return (
     <div>
-      <PageHeader eyebrow="Modules B & C" title="Rainfall-conditioned risk and forecasting limits">
-        Urban waterlogging in Kolkata has no openly available hourly flood record, so no hourly flood-forecasting model can be validated.
-        What can be validated is a <b>city-scale event-day model</b>: given rainfall, how likely is a day to appear in the documented waterlogging
-        record? Below: rainfall history, product comparison, how skill decays as rainfall information is withheld, and a scenario tool.
+      <PageHeader eyebrow="Forecasting" title="Can we tell in advance when streets will flood?">
+        Short answer: only on the day itself. Here is what the past ten monsoons tell us about rain and waterlogging in Kolkata.
       </PageHeader>
+      <Section>
+        <Plain title="What we found">
+          <ul className="list-disc space-y-2 pl-5">
+            <li><b>A lot of rain in a few hours is what floods streets.</b> Steady, light rain over a whole day rarely does.</li>
+            <li><b>On the day, we can spot risky rain fairly well.</b> Even with the last few hours of rain unknown, the warning signs are usually there.</li>
+            <li><b>A day ahead, we cannot tell.</b> Using only rain from the previous day, our guesses were barely better than chance. Real warnings need good rain forecasts.</li>
+            <li><b>Rain gauges, satellites and weather models all gave similar answers.</b> No single source of rain data was clearly better.</li>
+          </ul>
+        </Plain>
+        {d && (
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            <div className="border border-line bg-white p-5">
+              <div className="text-[16px] font-semibold">Try it: how much rain is risky?</div>
+              <label className="mt-3 block text-[14px] text-slate">Rain over two days: <b className="num text-ink">{scen} mm</b> ({rainWords(scen / 2).toLowerCase()} each day)
+                <input type="range" min={0} max={300} step={5} value={scen} onChange={(e) => setScen(Number(e.target.value))} className="mt-1 w-full" />
+              </label>
+              {scenP !== null && (
+                <div className="mt-3 border-l-4 p-3" style={{ borderColor: band(scenP).color }}>
+                  <div className="text-[16px] font-semibold">{band(scenP).label}</div>
+                  <p className="text-[13.5px] text-slate">{band(scenP).text}</p>
+                </div>
+              )}
+              <p className="mt-2 text-[12px] text-mute">A made-up example, assuming a quarter of the rain falls in the single heaviest hour. Not a forecast.</p>
+            </div>
+            <div className="border border-line bg-white p-5">
+              <div className="text-[16px] font-semibold">How much warning does rain give?</div>
+              <table className="mt-2 w-full text-[14px]">
+                <tbody>
+                  {[['Rain known for the whole day', d.lead_time['0h'].roc_auc, 'Works fairly well'], ['Last 6 hours unknown', d.lead_time['6h'].roc_auc, 'Still works fairly well'],
+                    ['Last 12 hours unknown', d.lead_time['12h'].roc_auc, 'A little worse'], ['Only the previous day\'s rain', d.lead_time['24h'].roc_auc, 'About as good as guessing'],
+                    ['Two days earlier', d.lead_time['48h'].roc_auc, 'No use at all']].map(([t, v, w]) => (
+                    <tr key={String(t)} className="border-b border-paper-2 last:border-0">
+                      <td className="py-1.5 pr-2 text-slate">{t}</td>
+                      <td className="w-28 py-1.5"><div className="h-2 bg-paper-2"><div className="h-2 bg-ink" style={{ width: `${Math.max(0, (Number(v) - 0.5) * 200)}%` }} /></div></td>
+                      <td className="py-1.5 pl-2 font-medium">{w}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="mt-2 text-[12px] text-mute">Bars show how much better than a coin toss each option is at picking out days that flooded.</p>
+            </div>
+          </div>
+        )}
+        <p className="mt-4 text-[14px] text-slate">For the rain expected in the next few days, see <a href="#/live">Live Conditions</a>.</p>
+      </Section>
 
+      <TechDetails>
       <Section kicker="Rainfall history" title="Daily rainfall from three independent products" right={
         <label className="text-[12px] text-slate">Season{' '}
           <select value={year} onChange={(e) => setYear(Number(e.target.value))} className="border border-line bg-white px-2 py-1">
@@ -76,7 +120,7 @@ export default function Forecasting() {
           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11.5px] text-mute">
             <span><Kind k="observed" /> IMD gauge grid</span><span><Kind k="observed" /> CHIRPS satellite estimate</span><span><Kind k="modelled" /> ERA5 reanalysis</span><span><Kind k="model" /> event-day probability</span>
             <span><span className="text-red">│</span> documented waterlogging day</span>
-            {year === 2026 && <span className="text-orange">IMD 2026 gridded data not yet released — ERA5/CHIRPS only.</span>}
+            {year === 2026 && <span className="text-orange">IMD 2026 gridded data not yet released; ERA5/CHIRPS only.</span>}
           </div>
         </Panel>
       </Section>
@@ -137,7 +181,7 @@ export default function Forecasting() {
                 <table className="data">
                   <thead><tr><th>Requested horizon</th><th>Status</th></tr></thead>
                   <tbody>
-                    <tr><td>1 h, 3 h</td><td><span className="text-orange">Not available</span> — no hourly waterlogging labels</td></tr>
+                    <tr><td>1 h, 3 h</td><td><span className="text-orange">Not available</span>: no hourly waterlogging labels</td></tr>
                     <tr><td>6 h</td><td>Diagnostic only: AUC {d.lead_time['6h'].roc_auc.toFixed(2)} with reanalysis rain up to 6 h before day end</td></tr>
                     <tr><td>12 h</td><td>Diagnostic only: AUC {d.lead_time['12h'].roc_auc.toFixed(2)}</td></tr>
                     <tr><td>24 h</td><td><span className="text-orange">No useful skill</span> (AUC {d.lead_time['24h'].roc_auc.toFixed(2)}) without forecast rainfall</td></tr>
@@ -172,7 +216,7 @@ export default function Forecasting() {
                 </label>
                 <div className="mt-4 border-t border-paper-2 pt-3">
                   <div className="text-[11px] uppercase tracking-wide text-mute">Probability the day enters the documented record</div>
-                  <div className="num text-3xl font-medium">{scenP === null ? '—' : fmt.pct(scenP, 1)}</div>
+                  <div className="num text-3xl font-medium">{scenP === null ? 'n/a' : fmt.pct(scenP, 1)}</div>
                   <p className="mt-1 text-[11.5px] leading-snug text-mute">{d.scenario_curve.note}. Antecedent 72 h fixed at its median. Max 3 h / 6 h derived from the peak share.</p>
                 </div>
               </Panel>
@@ -189,6 +233,7 @@ export default function Forecasting() {
           </Section>
         </>
       )}
+      </TechDetails>
     </div>
   )
 }

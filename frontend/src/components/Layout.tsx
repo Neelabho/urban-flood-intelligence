@@ -40,14 +40,14 @@ export default function Layout() {
               <select className="border border-[#33445c] bg-ink-2 px-2 py-1 text-[12px] text-paper" value={pilot?.id ?? 'kolkata'} onChange={() => undefined} aria-label="City">
                 {cities.data?.cities.map((c) => (
                   <option key={c.id} value={c.id} disabled={!c.has_outputs}>
-                    {c.name}{c.has_outputs ? '' : c.status === 'assessed' ? ' — assessed, not modelled' : ' — planned'}
+                    {c.name}{c.has_outputs ? '' : c.status === 'assessed' ? ' (studied, map not built yet)' : ' (planned)'}
                   </option>
                 ))}
               </select>
             </label>
             <span className="hidden items-center gap-1.5 text-[#9fb0c4] md:flex" title="Data mode">
               <span className={`inline-block h-1.5 w-1.5 rounded-full ${api === 'online' ? 'bg-[#7fb38c]' : 'bg-[#9fb0c4]'}`} />
-              {api === 'online' ? 'API connected' : api === 'checking' ? 'Checking API…' : api === 'offline' ? 'API offline · static data' : 'Static research build'}
+              {api === 'online' ? 'Live server connected' : api === 'checking' ? 'Connecting…' : api === 'offline' ? 'Server offline, using saved data' : 'Using saved data'}
             </span>
             <button className="border border-[#33445c] px-2 py-1 lg:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label="Menu">
               Menu
@@ -78,7 +78,7 @@ export default function Layout() {
       <footer className="border-t border-line bg-paper-2 px-4 py-5 text-[12px] text-mute md:px-8">
         <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-3">
           <div>
-            Research prototype. Not an official warning service — follow{' '}
+            Research prototype. Not an official warning service. Follow{' '}
             <a href="https://mausam.imd.gov.in/" target="_blank" rel="noreferrer">IMD</a> and municipal advisories.
           </div>
           <div>

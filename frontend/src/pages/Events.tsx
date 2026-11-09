@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { GeoJSONSource, Map as MLMap } from 'maplibre-gl'
 import EChart, { AXIS } from '../components/EChart'
 import MapCanvas from '../components/MapCanvas'
-import { Callout, ErrorBox, Kind, Loading, PageHeader, Panel, Section } from '../components/ui'
+import { Callout, Details, ErrorBox, Kind, Loading, PageHeader, Panel, Plain, Section, TechDetails } from '../components/ui'
+import { rainWords } from '../lib/model'
 import { fmt, useStatic } from '../lib/data'
 import type { FloodEvent, LocalityFeature } from '../lib/types'
 
@@ -67,40 +68,30 @@ export default function Events() {
   if (ev.error) return <ErrorBox error={ev.error} />
   return (
     <div>
-      <PageHeader eyebrow="Module D" title="Historical events catalogue">
-        Every entry links to its original source. Event dates come from cited news reports (locality-level or city-level) and from the
-        India Flood Inventory (IMD Disastrous Weather Events). Rainfall context and Sentinel-1 acquisitions near each date are attached.
-        Mapped flood <em>extents</em> do not exist for these events; points are geocoded mentions.
+      <PageHeader eyebrow="Historical events" title="Past floods in Kolkata">
+        Days when news reports or official records said Kolkata's streets were under water. Pick a day from the list to see what happened,
+        where, and how much it rained.
       </PageHeader>
-      <Section kicker="Timeline" title="Events per year by evidence type">
-        <Panel>
-          {ev.loading ? <Loading /> : (
-            <EChart height={220} option={{
-              tooltip: { trigger: 'axis' }, legend: { top: 0, textStyle: { fontSize: 11 } }, grid: { left: 36, right: 12, top: 30, bottom: 30 },
-              xAxis: { type: 'category', data: perYear.ys, ...AXIS }, yAxis: { type: 'value', minInterval: 1, ...AXIS },
-              series: [
-                { name: 'News — localities named', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.loc), itemStyle: { color: '#a8322d' } },
-                { name: 'News — city-level', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.city), itemStyle: { color: '#d9762b' } },
-                { name: 'India Flood Inventory', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.ifi), itemStyle: { color: '#3d6a8e' } },
-              ],
-            }} />
-          )}
-          <p className="text-[11.5px] text-mute">Uneven counts across years reflect archive accessibility and reporting practice, not flood frequency.</p>
-        </Panel>
+      <Section>
+        <p className="max-w-3xl text-[14.5px] leading-relaxed text-slate">
+          We found {ev.data?.events.length ?? 'many'} flood days going back to 1975. The most detailed ones, from 2021 onwards, name the exact streets and
+          neighbourhoods that flooded. Older entries come from official disaster records and only say that Kolkata was affected. These are only
+          the floods we could find in news and records. Many smaller ones were never reported.
+        </p>
       </Section>
       <Section>
-        <div className="grid gap-4 lg:grid-cols-[340px_1fr]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
           <div className="border border-line bg-white">
             <div className="space-y-2 border-b border-paper-2 p-3">
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search date, locality or cause" className="w-full border border-line px-2 py-1.5 text-[13px]" aria-label="Search events" />
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a date or a place" className="w-full border border-line px-2 py-1.5 text-[13px]" aria-label="Search events" />
               <div className="flex flex-wrap gap-1 text-[11.5px]">
                 {(['model', 'localities', 'archival', 'all'] as Filter[]).map((f) => (
                   <button key={f} onClick={() => setFilter(f)} className={`border px-2 py-0.5 ${filter === f ? 'border-ink bg-ink text-paper' : 'border-line text-slate'}`}>
-                    {{ model: '2016–2026', localities: 'With localities', archival: 'Archival (IFI)', all: 'All' }[f]}
+                    {{ model: '2016 to 2026', localities: 'With named places', archival: 'Older records', all: 'All' }[f]}
                   </button>
                 ))}
               </div>
-              <div className="text-[11px] text-mute">{list.length} events</div>
+              <div className="text-[11px] text-mute">{list.length} flood days</div>
             </div>
             <ul className="max-h-[560px] overflow-y-auto">
               {list.map((e) => (
@@ -111,15 +102,31 @@ export default function Events() {
                   </button>
                 </li>
               ))}
-              {!list.length && <li className="p-4 text-sm text-mute">No events match.</li>}
+              {!list.length && <li className="p-4 text-sm text-mute">Nothing matches your search.</li>}
             </ul>
           </div>
           {!cur ? <Loading /> : (
             <div className="space-y-4">
+              <Plain title={fmt.date(cur.date)}>
+                <p>{summary(cur)}</p>
+                {cur.n_localities > 0 && (
+                  <div className="mt-3 h-[300px] border border-line"><MapCanvas center={[88.36, 22.56]} zoom={11} className="h-full w-full" onReady={onReady} /></div>
+                )}
+                {cur.n_localities > 0 && <p className="mt-2 text-[13px] text-slate">Red dots: places named in the news. A dot marks the place mentioned, not the exact size of the flooded area.</p>}
+                <div className="mt-3 text-[14px]">
+                  <b>Read the original {cur.sources.length > 1 ? 'reports' : 'report'}:</b>
+                  <ul className="mt-1 list-disc pl-5">
+                    {cur.sources.map((src, i) => <li key={i}><a href={src.url} target="_blank" rel="noreferrer">{src.outlet}{src.published_ist ? `, ${fmt.date(src.published_ist.slice(0, 10))}` : ''}</a></li>)}
+                  </ul>
+                </div>
+              </Plain>
+              <div className="border border-line bg-white">
+                <Details title="How did we get this?">
+                  <div className="space-y-4 p-4">
               <Panel title={`${fmt.date(cur.date)} · ${cur.n_localities} named localities`} note={cur.source_confidence}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="h-[280px] border border-line">
-                    {cur.n_localities ? <MapCanvas center={[88.36, 22.56]} zoom={11} className="h-full w-full" onReady={onReady} /> : <div className="flex h-full items-center justify-center p-4 text-center text-[12.5px] text-mute">No locality-level information for this event (city- or district-level source).</div>}
+                    <div className="flex h-full items-center justify-center p-4 text-center text-[12.5px] text-mute">Map shown above. Points are geocoded report mentions, not mapped flood extents.</div>
                   </div>
                   <div className="text-[12.5px]">
                     <div className="eyebrow mb-1">Rainfall context</div>
@@ -128,13 +135,13 @@ export default function Events() {
                         <tr><td className="text-slate">IMD max cell, IMD day D / D+1 <Kind k="observed" /></td><td className="num text-right">{fmt.n(cur.rainfall.imd_max_cell_mm_day_D, 0)} / {fmt.n(cur.rainfall.imd_max_cell_mm_day_D1, 0)} mm</td></tr>
                         <tr><td className="text-slate">ERA5 48 h / peak hour <Kind k="modelled" /></td><td className="num text-right">{fmt.n(cur.rainfall.era5_48h_mm, 0)} mm / {fmt.n(cur.rainfall.era5_max1h_mm, 1)} mm</td></tr>
                         <tr><td className="text-slate">CHIRPS 48 h max cell <Kind k="observed" /></td><td className="num text-right">{fmt.n(cur.rainfall.chirps_max_cell_48h_mm, 0)} mm</td></tr>
-                        <tr><td className="text-slate">Event-day probability (out-of-season CV) <Kind k="model" /></td><td className="num text-right">{cur.rainfall.p_event_day_loyo === undefined ? '—' : fmt.pct(cur.rainfall.p_event_day_loyo, 0)}</td></tr>
+                        <tr><td className="text-slate">Event-day probability (out-of-season CV) <Kind k="model" /></td><td className="num text-right">{cur.rainfall.p_event_day_loyo === undefined ? 'n/a' : fmt.pct(cur.rainfall.p_event_day_loyo, 0)}</td></tr>
                       </tbody>
                     </table>
                     <div className="eyebrow mb-1 mt-3">Satellite evidence (Sentinel-1, day −1 to +3)</div>
                     {cur['sentinel1_within_-1_+3_days'].length === 0 ? <div className="text-mute">No acquisition in window.</div> : (
                       <ul className="space-y-0.5">{cur['sentinel1_within_-1_+3_days'].map((s) => (
-                        <li key={s.date + s.orbit} className="num text-[11.5px]">{s.date} {s.time_utc} UTC · {s.orbit} · coverage {s.coverage === null ? '—' : fmt.pct(s.coverage, 0)} · new open water {s.new_water_frac_vs_previous === null ? 'n/a (no prior pair)' : fmt.pct(s.new_water_frac_vs_previous, 2)}</li>
+                        <li key={s.date + s.orbit} className="num text-[11.5px]">{s.date} {s.time_utc} UTC · {s.orbit} · coverage {s.coverage === null ? 'n/a' : fmt.pct(s.coverage, 0)} · new open water {s.new_water_frac_vs_previous === null ? 'n/a (no prior pair)' : fmt.pct(s.new_water_frac_vs_previous, 2)}</li>
                       ))}</ul>
                     )}
                   </div>
@@ -166,11 +173,49 @@ export default function Events() {
                 </ul>
                 <div className="mt-2 text-[11.5px] text-mute">{cur.limitations}</div>
               </Panel>
+                  </div>
+                </Details>
+              </div>
             </div>
           )}
         </div>
       </Section>
+      <TechDetails title="More about this record">
+      <Section kicker="Timeline" title="Events per year by evidence type">
+        <Panel>
+          {ev.loading ? <Loading /> : (
+            <EChart height={220} option={{
+              tooltip: { trigger: 'axis' }, legend: { top: 0, textStyle: { fontSize: 11 } }, grid: { left: 36, right: 12, top: 30, bottom: 30 },
+              xAxis: { type: 'category', data: perYear.ys, ...AXIS }, yAxis: { type: 'value', minInterval: 1, ...AXIS },
+              series: [
+                { name: 'News, places named', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.loc), itemStyle: { color: '#a8322d' } },
+                { name: 'News, city-wide', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.city), itemStyle: { color: '#d9762b' } },
+                { name: 'India Flood Inventory', type: 'bar', stack: 'a', data: perYear.rows.map((r) => r.ifi), itemStyle: { color: '#3d6a8e' } },
+              ],
+            }} />
+          )}
+          <p className="text-[11.5px] text-mute">Uneven counts across years reflect archive accessibility and reporting practice, not flood frequency.</p>
+        </Panel>
+      </Section>
       <Section><Callout>The event-day model uses the 24 documented days from 2016–2026. Many unreported waterlogging days certainly exist; they sit unlabelled among the negatives, which makes reported skill conservative.</Callout></Section>
+      </TechDetails>
     </div>
   )
+}
+
+function summary(e: FloodEvent): string {
+  const rain = Math.max(e.rainfall.imd_max_cell_mm_day_D ?? -1, e.rainfall.imd_max_cell_mm_day_D1 ?? -1)
+  const parts: string[] = []
+  if (rain > 0) parts.push(`${rainWords(rain)} was recorded around Kolkata, up to about ${Math.round(rain)} mm in a day.`)
+  else if (e.rainfall.era5_48h_mm != null) parts.push(`Weather records suggest about ${Math.round(e.rainfall.era5_48h_mm)} mm of rain over two days.`)
+  if (e.n_localities > 0) {
+    const names = e.localities.slice(0, 5).join(', ')
+    parts.push(`News reports named ${e.n_localities} place${e.n_localities > 1 ? 's' : ''} under water, including ${names}${e.n_localities > 5 ? ' and others' : ''}.`)
+  } else {
+    const src = e.sources[0]
+    if (src?.cause) parts.push(`Official disaster records list it as: ${src.cause.toLowerCase()}${src.fatalities ? `, with ${src.fatalities} deaths reported` : ''}.`)
+    else if (src?.summary) parts.push(`Reports describe: ${src.summary}.`)
+    parts.push('These records do not name the streets affected.')
+  }
+  return parts.join(' ')
 }
