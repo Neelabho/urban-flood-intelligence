@@ -1,0 +1,29 @@
+# City registry. A city appears in the application only when `status` is not "planned"
+# and processed outputs exist under data/processed/<id>/. Models are city-specific;
+# no model trained for one city is applied to another without an explicit cross-city test.
+default_city: kolkata
+grid_resolution_m: 250        # analysis grid cell size (metric CRS)
+cities:
+  kolkata:
+    name: Kolkata
+    state: West Bengal
+    status: pilot
+    centre: [88.3639, 22.5726]          # lon, lat (WGS84)
+    bbox: [88.20, 22.40, 88.50, 22.70]  # study area: KMC + adjoining peri-urban belt
+    utm_epsg: 32645
+    imd_station_notes: "IMD Alipore (42807) and Dum Dum (42809) synoptic stations"
+  mumbai:
+    name: Mumbai
+    state: Maharashtra
+    status: assessed
+    centre: [72.8777, 19.0760]
+    bbox: [72.77, 18.89, 73.00, 19.28]
+    utm_epsg: 32643
+    imd_station_notes: "IMD Santacruz (43003) and Colaba (43057)"
+  chennai:   {name: Chennai,   state: Tamil Nadu,  status: planned, centre: [80.2707, 13.0827], bbox: [80.10, 12.85, 80.35, 13.25], utm_epsg: 32644}
+  delhi:     {name: Delhi,     state: NCT of Delhi, status: planned, centre: [77.2090, 28.6139], bbox: [76.84, 28.40, 77.35, 28.88], utm_epsg: 32643}
+  bengaluru: {name: Bengaluru, state: Karnataka,   status: planned, centre: [77.5946, 12.9716], bbox: [77.45, 12.83, 77.78, 13.14], utm_epsg: 32643}
+  hyderabad: {name: Hyderabad, state: Telangana,   status: planned, centre: [78.4867, 17.3850], bbox: [78.30, 17.25, 78.65, 17.55], utm_epsg: 32644}
+  ahmedabad: {name: Ahmedabad, state: Gujarat,     status: planned, centre: [72.5714, 23.0225], bbox: [72.45, 22.92, 72.72, 23.15], utm_epsg: 32643}
+  pune:      {name: Pune,      state: Maharashtra, status: planned, centre: [73.8567, 18.5204], bbox: [73.74, 18.42, 74.00, 18.64], utm_epsg: 32643}
+  guwahati:  {name: Guwahati,  state: Assam,       status: planned, centre: [91.7362, 26.1445], bbox: [91.60, 26.08, 91.90, 26.22], utm_epsg: 32646}
