@@ -159,9 +159,9 @@ export default function Intelligence() {
   const selEvent = datedEvents.find((e) => e.date === eventDate)
 
   return (
-    <div className="flex h-[calc(100vh-92px)] min-h-[620px] flex-col lg:flex-row">
+    <div className="flex flex-col lg:h-[calc(100vh-92px)] lg:min-h-[620px] lg:flex-row">
       {/* controls */}
-      <aside className="order-2 w-full shrink-0 overflow-y-auto border-r border-line bg-paper lg:order-1 lg:w-[300px]">
+      <aside className="order-2 w-full shrink-0 border-r border-line bg-paper lg:order-1 lg:w-[300px] lg:overflow-y-auto">
         <div className="border-b border-line p-3">
           <div className="eyebrow">Kolkata · 250 m grid</div>
           <form className="mt-2 flex gap-1" onSubmit={(e) => { e.preventDefault(); search() }}>
@@ -216,7 +216,7 @@ export default function Intelligence() {
       </aside>
 
       {/* map */}
-      <div className="relative order-1 h-[55vh] flex-1 lg:order-2 lg:h-auto">
+      <div className="relative order-1 h-[60vh] shrink-0 lg:order-2 lg:h-auto lg:flex-1 lg:shrink">
         <MapCanvas center={CENTER} zoom={11} className="h-full w-full" onReady={onReady} />
         {(grid.loading || !gj) && <div className="absolute inset-0 flex items-center justify-center bg-paper/60"><Loading what="250 m grid" /></div>}
         <div className="pointer-events-none absolute left-2 top-2 bg-white/90 px-2 py-1 text-[11px] text-slate">
@@ -225,7 +225,7 @@ export default function Intelligence() {
       </div>
 
       {/* info panel */}
-      <aside className="order-3 w-full shrink-0 overflow-y-auto border-l border-line bg-white lg:w-[340px]">
+      <aside className="order-3 w-full shrink-0 border-l border-line bg-white lg:w-[340px] lg:overflow-y-auto">
         {sel === null || !g ? (
           <div className="p-4 text-[13px] leading-relaxed text-slate">
             <div className="eyebrow mb-1">Location details</div>

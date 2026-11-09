@@ -4,14 +4,38 @@
     {
       "name": "ufii-frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "frontend", "run", "dev", "--", "--port", "5173", "--strictPort"],
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
       "port": 5173
     },
     {
       "name": "ufii-api",
       "runtimeExecutable": ".venv/bin/uvicorn",
-      "runtimeArgs": ["backend.app.main:app", "--port", "8000"],
+      "runtimeArgs": [
+        "backend.app.main:app",
+        "--port",
+        "8000"
+      ],
       "port": 8000
+    },
+    {
+      "name": "ufii-frontend-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev:api"
+      ],
+      "port": 5174
     }
   ]
 }

@@ -20,7 +20,7 @@ from .store import NotAvailable
 
 app = FastAPI(title="Urban Flood Intelligence India API", version="0.1.0",
               description="Research API for urban waterlogging susceptibility and rainfall-conditioned risk (Kolkata pilot).")
-origins = [o.strip() for o in os.environ.get("UFII_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")]
+origins = [o.strip() for o in os.environ.get("UFII_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174").split(",")]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET"], allow_headers=["*"])
 FORECAST_CACHE = store.TTLCache(900)
 CityId = Annotated[str, Query(min_length=2, max_length=32, pattern=r"^[a-z_]+$", description="city id from /api/cities")]

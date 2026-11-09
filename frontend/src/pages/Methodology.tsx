@@ -2,7 +2,7 @@ import { Callout, Kind, PageHeader, Section } from '../components/ui'
 
 const STEPS: [string, string, string[]][] = [
   ['Data acquisition', 'Scripted, logged downloads of public data', ['Sentinel-1 RTC (472 acquisitions)', 'Copernicus GLO-30, WorldCover, JRC GSW, GHS-POP', 'OSM via Overpass', 'IMD, CHIRPS, ERA5, IMERG windows', 'Cited waterlogging reports, India Flood Inventory']],
-  ['Quality control', 'Measured, not assumed', ['Rainfall cross-product checks', 'SAR coverage per acquisition', 'Geocode audit (3 rejected, 6 unresolved)', 'Missingness mechanism tests']],
+  ['Quality control', 'Measured, not assumed', ['Rainfall cross-product checks', 'SAR coverage per acquisition', 'Geocode audit (4 rejected, 6 unresolved)', 'Missingness mechanism tests']],
   ['Spatial processing', 'One metric grid for everything', ['UTM 45N, 250 m cells (16,875)', 'Average/min/sum resampling by variable', 'Stream-burned D8 routing (pysheds)', '25 m sub-grid for SAR & distances']],
   ['Feature engineering', 'Hazard and exposure kept apart', ['Terrain (DSM): elevation, slope, HAND, TWI, depressions', 'Hydrology: distances, water bodies, SAR water', 'Urban fabric: land cover, roads', 'Exposure: population, buildings, facilities']],
   ['Model development', 'Simple first, complex only if justified', ['LR, tree, RF, XGBoost, LightGBM, SVM, MLP', 'Terrain index and built-up baselines', 'Event-day logistic / boosted models']],
@@ -72,7 +72,8 @@ export default function Methodology() {
             and imputed inputs. Confidence and susceptibility are shown as separate layers.</p>
           <h3>Why no deep spatiotemporal model</h3>
           <p>ConvLSTM, graph networks and transformers need many labelled space-time samples. With 75 positive cells and 24 event days, they would memorise noise. A small MLP is
-            reported as an "advanced" comparator on identical folds; it does not outperform tree ensembles.</p>
+            reported as an "advanced" comparator on identical folds: its PR-AUC point estimate is the highest (0.21) but its ROC-AUC is lower
+            (0.86 vs 0.90 for random forest), and all differences sit inside the bootstrap intervals — no model is clearly superior.</p>
         </div>
       </Section>
       <Section kicker="Geospatial" title="Grid and coordinate reference">

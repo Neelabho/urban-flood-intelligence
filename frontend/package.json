@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:api": "VITE_API_BASE=http://localhost:8000 vite --port 5174 --strictPort"
   },
   "dependencies": {
     "echarts": "^5.6.0",
