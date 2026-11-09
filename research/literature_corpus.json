@@ -1714,5 +1714,59 @@
   "topics": [
    "kolkata_flood"
   ]
+ },
+ {
+  "title": "Sample selection bias and presence‐only distribution models: implications for background and pseudo‐absence data",
+  "year": 2009,
+  "doi": "https://doi.org/10.1890/07-2153.1",
+  "venue": "Ecological Applications",
+  "authors": [
+   "Steven J. Phillips",
+   "Miroslav Dudı́k",
+   "Jane Elith",
+   "Catherine Helen Graham"
+  ],
+  "openalex_id": null,
+  "cited_by_count": null,
+  "abstract": "",
+  "topics": [
+   "targeted"
+  ]
+ },
+ {
+  "title": "The climate hazards infrared precipitation with stations—a new environmental record for monitoring extremes",
+  "year": 2015,
+  "doi": "https://doi.org/10.1038/sdata.2015.66",
+  "venue": "Scientific Data",
+  "authors": [
+   "Chris C. Funk",
+   "Pete J. Peterson",
+   "M. F. Landsfeld",
+   "Diego H. Pedreros"
+  ],
+  "openalex_id": null,
+  "cited_by_count": null,
+  "abstract": "",
+  "topics": [
+   "targeted"
+  ]
+ },
+ {
+  "title": "India flood inventory: creation of a multi-source national geospatial database to facilitate comprehensive flood research",
+  "year": 2021,
+  "doi": "https://doi.org/10.1007/s11069-021-04698-6",
+  "venue": "Natural Hazards",
+  "authors": [
+   "Manabendra Saharia",
+   "Avish Jain",
+   "Ronit Baishya",
+   "Saagar Haobam"
+  ],
+  "openalex_id": null,
+  "cited_by_count": null,
+  "abstract": "",
+  "topics": [
+   "targeted"
+  ]
  }
 ]

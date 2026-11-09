@@ -1,8 +1,8 @@
 {
   "experiment_id": "sus_kolkata_torch_mlp_spatialcv",
   "group": "advanced_models",
-  "date_utc": "2026-11-09T08:58:38+00:00",
-  "git_commit": "e456cfd",
+  "date_utc": "2026-11-09T09:21:12+00:00",
+  "git_commit": "5dc91c0",
   "python": "3.12.13",
   "city": "kolkata",
   "dataset_version": "74d10aa608b5",

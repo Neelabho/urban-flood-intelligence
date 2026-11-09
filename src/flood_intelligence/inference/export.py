@@ -115,6 +115,7 @@ def export_grid(city, out) -> None:
     meta = {k: {"label": v[0], "unit": v[1], "kind": v[2], "source": v[3]} for k, v in FIELD_META.items()}
     _w(out / "grid.json", {
         "generated_utc": NOW, "city": city.id, "crs": grid.crs, "res_m": grid.res, "height": grid.height,
+        "transform": list(grid.transform)[:6],
         "width": grid.width, "corners": {"lon": np.round(lon.ravel(), 6).tolist(), "lat": np.round(lat.ravel(), 6).tolist()},
         "fields": fields, "field_meta": meta, "classes": CLASSES, "roles": ROLES, "shap_top3": top3,
         "notes": ["Susceptibility is relative (percentile within the study area), not an event probability.",

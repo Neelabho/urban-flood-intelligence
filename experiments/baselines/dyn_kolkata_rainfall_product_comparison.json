@@ -1,8 +1,8 @@
 {
   "experiment_id": "dyn_kolkata_rainfall_product_comparison",
   "group": "baselines",
-  "date_utc": "2026-11-09T08:57:53+00:00",
-  "git_commit": "e456cfd",
+  "date_utc": "2026-11-09T09:21:20+00:00",
+  "git_commit": "5dc91c0",
   "python": "3.12.13",
   "city": "kolkata",
   "model": "logistic_regression",

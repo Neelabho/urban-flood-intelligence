@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Map as MLMap, GeoJSONSource, ExpressionSpecification } from 'maplibre-gl'
 import MapCanvas from '../components/MapCanvas'
 import { ErrorBox, Kind, Loading, Timestamp } from '../components/ui'
-import { fmt, useStatic } from '../lib/data'
+import { API_BASE, fmt, useApiStatus, useStatic } from '../lib/data'
 import { LAYERS, SUS_COLORS, gridToGeoJSON, quantileStops, type LayerDef } from '../lib/layers'
 import type { FloodEvent, GridData, LocalityFeature } from '../lib/types'
 
@@ -242,8 +242,23 @@ export default function Intelligence() {
   )
 }
 
+function useLiveShap(id: number) {
+  const api = useApiStatus()
+  const [res, setRes] = useState<{ feature: string; shap: number }[] | null>(null)
+  useEffect(() => {
+    setRes(null)
+    if (api !== 'online' || !API_BASE) return
+    const ctl = new AbortController()
+    fetch(`${API_BASE}/api/explainability?city=kolkata&cell_id=${id}&top=8`, { signal: ctl.signal })
+      .then((r) => (r.ok ? r.json() : null)).then((j) => j?.contributions && setRes(j.contributions)).catch(() => undefined)
+    return () => ctl.abort()
+  }, [api, id])
+  return res
+}
+
 function CellPanel({ g, id, locs, modelTs, tuned, onClose }: { g: GridData; id: number; locs: LocalityFeature[]; modelTs?: string; tuned?: { max_depth: number; n_estimators: number }; onClose: () => void }) {
   const F = (k: string) => g.fields[k]?.[id] ?? null
+  const live = useLiveShap(id)
   const r = Math.floor(id / g.width)
   const c = id % g.width
   const cw = g.width + 1
@@ -285,8 +300,8 @@ function CellPanel({ g, id, locs, modelTs, tuned, onClose }: { g: GridData; id: 
       </div>
       {!water && (
         <div className="border-b border-paper-2 p-4">
-          <div className="eyebrow mb-1">Largest contributions (SHAP, log-odds)</div>
-          {g.shap_top3[id].map((s) => (
+          <div className="eyebrow mb-1">Largest contributions (SHAP, log-odds){live ? ' · live from API' : ''}</div>
+          {(live ? live.map((c) => ({ f: c.feature, v: c.shap })) : g.shap_top3[id]).map((s) => (
             <div key={s.f} className="flex items-center gap-2 py-0.5">
               <span className="flex-1 truncate">{g.field_meta[s.f]?.label ?? s.f.replace(/_/g, ' ')}</span>
               <span className={`num ${s.v > 0 ? 'text-red' : 'text-blue'}`}>{s.v > 0 ? '+' : ''}{s.v.toFixed(2)}</span>

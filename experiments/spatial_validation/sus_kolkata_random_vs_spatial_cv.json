@@ -1,8 +1,8 @@
 {
   "experiment_id": "sus_kolkata_random_vs_spatial_cv",
   "group": "spatial_validation",
-  "date_utc": "2026-11-09T08:58:03+00:00",
-  "git_commit": "e456cfd",
+  "date_utc": "2026-11-09T09:20:36+00:00",
+  "git_commit": "5dc91c0",
   "python": "3.12.13",
   "dataset_version": "74d10aa608b5",
   "city": "kolkata",

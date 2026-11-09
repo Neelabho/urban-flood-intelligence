@@ -1,0 +1,17 @@
+# Research questions (refined)
+
+The original questions (RQ1–RQ6 of the project brief) were refined after the data audit. Each refined question states
+what evidence answers it in this repository and the current status. Contributions are hypotheses until independently
+validated.
+
+| ID | Original | Refined question | Evidence | Status / current answer |
+|---|---|---|---|---|
+| RQ1 | How accurately can urban flood susceptibility be estimated from terrain, land use, infrastructure and meteorology? | How well do static terrain, hydrology and urban-fabric features rank 250 m cells containing **documented** waterlogging localities above other **urban** cells, under spatially blocked validation? | `experiments/baselines/`, `experiments/spatial_validation/` | Spatial-CV ROC-AUC 0.84–0.90 (PR-AUC lift ~15–19×); held-out blocks 0.86 [0.63–0.97]. Meteorology is not a static predictor and is handled in RQ2/RQ3. |
+| RQ2 | Does satellite precipitation improve predictions vs conventional rainfall? | Does satellite-derived (CHIRPS) or reanalysis (ERA5) rainfall discriminate documented waterlogging days better than the IMD gauge grid? | `experiments/baselines/dyn_kolkata_rainfall_product_comparison.json` | No: ROC-AUC 0.88–0.91 with overlapping year-bootstrap CIs (16 event days, 2016–2025). IMERG could only be used for case studies. |
+| RQ3 | Can spatiotemporal architectures improve short-term flood-risk estimation? | How quickly does event-day skill decay when recent rainfall information is withheld, and is there enough temporal label data to train sequence models? | `experiments/advanced_models/dyn_kolkata_lead_time_sensitivity.json` | Skill ~0.74 up to a 6 h cut-off, 0.72 at 12 h, 0.57 at 24 h, below chance at 48 h. 24 event days cannot support ConvLSTM/GNN/Transformers; not attempted. |
+| RQ4 | How does performance vary across geographical areas? | How much does performance drop from random to spatially blocked CV, and does skill hold for localities first documented later? | `sus_kolkata_random_vs_spatial_cv`, `sus_kolkata_spatiotemporal` | Random CV inflates PR-AUC (0.27 vs 0.18). Later-documented localities: ROC-AUC 0.88 (0.83 for those > 500 m from earlier ones). Cross-city: not tested. |
+| RQ5 | How can uncertainty be quantified in data-sparse settings? | How large is block-bootstrap ensemble disagreement, where is it concentrated, and how should it be communicated alongside extrapolation and imputation flags? | `experiments/uncertainty/` | Median SD of the percentile rank across 30 members: 1.4 points in the *very high* class, 6.4 in *high*, 15–19 in low/moderate classes (overall 15.7). The top of the ranking is stable; the middle is not. Urban and non-urban cells have similar spread (16.2 vs 15.4), so the extrapolation flag is reported separately. |
+| RQ6 | Which features contribute most? | Which feature groups carry predictive signal (ablation), and how should DSM-derived terrain attributions be interpreted? | `experiments/ablation_studies/`, SHAP in `susceptibility_results.json` | Surface-model terrain group matters most, but a bare-terrain index fails; attributions indicate urban morphology, not causal terrain control. |
+| RQ7 (new) | — | Can Sentinel-1 change detection provide labels for urban waterlogging in Kolkata? | `data/metadata/data_quality_report.json` | No rainfall-driven signal in built-up cells (negative result). |
+
+Numbers are copied from the experiment records; re-running `scripts/run_pipeline.sh` regenerates them.

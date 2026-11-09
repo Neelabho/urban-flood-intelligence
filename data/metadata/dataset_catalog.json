@@ -309,7 +309,7 @@
     "format": "JSON -> Parquet",
     "nature": "reanalysis (model)",
     "used_for": "sub-daily intensity features, lead-time experiment, 2026 season (IMD not yet released)",
-    "limitations": "Reanalysis smooths convective peaks (wet-day totals ~44% of IMD on average).",
+    "limitations": "Reanalysis smooths convective peaks (on IMD wet days >20 mm, ERA5 city-mean totals are ~61% of IMD; daily Pearson r = 0.67).",
     "downloads": [
       {
         "path": "data/interim/kolkata/rain_era5_hourly.parquet",

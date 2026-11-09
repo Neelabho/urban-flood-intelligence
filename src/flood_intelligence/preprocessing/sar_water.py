@@ -121,7 +121,57 @@ def run(city_id: str = "kolkata") -> None:
     log.info("%d scenes, %d same-orbit pairs", len(sc), len(newwater_stack))
 
 
+def label_feasibility_test(city_id: str = "kolkata", vv_thr: float = -18.0, min_cov: float = 0.9) -> pd.DataFrame:
+    """Does SAR-detected *new* open water respond to rainfall, by land-cover class?
+
+    Same-orbit pairs <= 12 days apart from the two full-coverage orbits (D048, A012); new water = VV below
+    `vv_thr` now, not before, VV drop > 3 dB, not permanent water. Fractions per ESA WorldCover class are
+    correlated (Spearman) with IMD antecedent rainfall. Output feeds the Data Observatory.
+    """
+    import xarray as xr
+
+    city = get_city(city_id)
+    fine = make_grid(city).fine(FINE)
+    perm = permanent_water_mask(city, fine)
+    wc = np.zeros(fine.shape, "uint8")
+    with rasterio.open(city.raw("landcover") / "esa_worldcover_2021_v200_utm10m.tif") as f:
+        reproject(f.read(1), wc, src_transform=f.transform, src_crs=f.crs, dst_transform=fine.transform,
+                  dst_crs=fine.crs, resampling=Resampling.mode)
+    s1 = city.raw("satellite", "sentinel1")
+    idx = pd.read_csv(s1 / "index.csv")
+    idx["d"] = pd.to_datetime(idx.date)
+    idx = idx[idx.orbit.isin(["D048", "A012"])].sort_values("d")
+    imd = xr.open_dataset(city.interim() / "rain_imd_daily.nc").rain_mm
+    lon0, lat0, lon1, lat1 = city.bbox
+    imd = imd.sel(lat=slice(lat0 - 0.125, lat1 + 0.125), lon=slice(lon0 - 0.125, lon1 + 0.125)).mean(["lat", "lon"]).to_series()
+    rows, prev = [], {}
+    for _, r in idx.iterrows():
+        vv = _read(s1 / r.vv_path)
+        if np.isfinite(vv).mean() < min_cov:
+            continue
+        p = prev.get(r.orbit)
+        if p is not None and (r.d - p[0]).days <= 12:
+            pv = p[1]
+            new = (vv < vv_thr) & (pv >= vv_thr) & ((vv - pv) < -DROP_DB) & ~perm
+            rec = {"date": r.date, "orbit": r.orbit, "month": r.d.month}
+            for k, name in [(50, "built"), (40, "crop"), (10, "tree"), (30, "grass"), (90, "wetland")]:
+                m = (wc == k) & np.isfinite(vv) & np.isfinite(pv)
+                rec["new_" + name] = float(new[m].mean()) if m.any() else np.nan
+            dd = r.d.normalize()
+            rec["rain1"] = float(imd.get(dd, np.nan))
+            rec["rain3"] = float(imd.loc[dd - pd.Timedelta(days=2): dd].sum())
+            rec["rain7"] = float(imd.loc[dd - pd.Timedelta(days=6): dd].sum())
+            rows.append(rec)
+        prev[r.orbit] = (r.d, vv)
+    df = pd.DataFrame(rows)
+    df.to_csv(city.interim() / "sar" / "exploratory_newwater_by_landcover.csv", index=False)
+    log.info("label feasibility: %d pairs; spearman(built, rain3) = %.3f", len(df),
+             df.new_built.corr(df.rain3, method="spearman"))
+    return df
+
+
 if __name__ == "__main__":
     import sys
 
     run(*(sys.argv[1:2] or ["kolkata"]))
+    label_feasibility_test(*(sys.argv[1:2] or ["kolkata"]))
