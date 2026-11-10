@@ -44,3 +44,15 @@ def test_utm_zone_matches_city_longitude():
     for cid, c in registry()["cities"].items():
         zone = int((c["centre"][0] + 180) // 6) + 1
         assert c["utm_epsg"] == 32600 + zone, cid
+
+
+def test_fabdem_tile_names_follow_bristol_layout():
+    from flood_intelligence.ingestion.static_layers import _fabdem_tiles
+
+    assert _fabdem_tiles((88.17, 22.37, 88.53, 22.73)) == [
+        ("N20E080-N30E090_FABDEM_V1-2.zip", "N22E088_FABDEM_V1-2.tif")]
+    # Mumbai bbox spans two 1-degree rows; the zip block is shared
+    names = _fabdem_tiles((72.74, 18.86, 73.03, 19.31))
+    assert [t for _, t in names] == ["N18E072_FABDEM_V1-2.tif", "N18E073_FABDEM_V1-2.tif",
+                                     "N19E072_FABDEM_V1-2.tif", "N19E073_FABDEM_V1-2.tif"]
+    assert {z for z, _ in names} == {"N10E070-N20E080_FABDEM_V1-2.zip"}

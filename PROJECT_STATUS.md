@@ -1,6 +1,6 @@
 # Project status — UFII
 
-_Last updated: 2026-11-09 (end of autonomous build run)._
+_Last updated: 2026-11-10._
 
 | Area | Status | Notes |
 |---|---|---|
@@ -12,6 +12,7 @@ _Last updated: 2026-11-09 (end of autonomous build run)._
 | SAR label test | ✅ Done | Negative result; SAR used as features only |
 | Features & imputation | ✅ Done | 38 static features; KNN imputation evaluated |
 | Module A susceptibility | ✅ Done | 7 models + 3 baselines; spatial/held-out/temporal validation; SHAP; bootstrap uncertainty |
+| Bare-earth DEM sensitivity | ✅ Done | FABDEM vs GLO-30: CV skill unchanged, held-out lower; DSM slope was mostly building texture (technical report §3a) |
 | Module B event-day risk | ✅ Done | 24 event days; product comparison |
 | Module C forecasting | ⚠️ Partial by design | Lead-time cut-off experiment only; hourly labels do not exist |
 | Module D events | ✅ Done | 94 catalogued events with sources |
@@ -28,7 +29,6 @@ _Last updated: 2026-11-09 (end of autonomous build run)._
 
 ## Open items
 1. Expand and double-code the observation inventory; add Bengali-language and KMC sources.
-2. Bare-earth DEM sensitivity (FABDEM, non-commercial licence).
-3. Mumbai replication and cross-city transfer test.
-4. KMC rain-gauge / sensor data request for sub-daily labels.
-5. Verify the site in Google Search Console and submit the sitemap (docs/GOOGLE_SEARCH_CONSOLE.md).
+2. Mumbai replication and cross-city transfer test.
+3. KMC rain-gauge / sensor data request for sub-daily labels.
+4. Verify the site in Google Search Console and submit the sitemap (docs/GOOGLE_SEARCH_CONSOLE.md).

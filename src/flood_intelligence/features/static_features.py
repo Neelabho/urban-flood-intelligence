@@ -45,11 +45,13 @@ def _to_grid(src_arr, src_transform, src_crs, grid: Grid, resampling, src_nodata
     return dst
 
 
-def terrain(city, grid: Grid, waterways, perm_water_30m) -> dict[str, np.ndarray]:
+def terrain(city, grid: Grid, waterways, perm_water_30m, dem_path=None) -> dict[str, np.ndarray]:
+    """Terrain + hydrological derivatives. `dem_path` defaults to GLO-30; the DEM sensitivity analysis passes
+    FABDEM resampled onto the same 30 m grid (perm_water_30m must match the DEM raster's shape)."""
     from pysheds.grid import Grid as PGrid
     from pysheds.sview import Raster
 
-    path = city.raw("elevation") / "copernicus_glo30_dem_utm30m.tif"
+    path = dem_path or city.raw("elevation") / "copernicus_glo30_dem_utm30m.tif"
     with rasterio.open(path) as f:
         dem = f.read(1).astype("float64")
         tr, crs = f.transform, f.crs
@@ -173,6 +175,28 @@ def sar_features(city, grid: Grid) -> dict[str, np.ndarray]:
             "sar_valid_obs": agg(n.astype("float32")), "_sar_n_scenes": len(idx)}
 
 
+def _jrc_occurrence(city):
+    with rasterio.open(city.raw("hydrology") / "jrc_gsw_v1_4_occurrence_utm30m.tif") as f:
+        occ = f.read(1).astype("float32")
+        occ[occ > 100] = 0
+        return occ, f.transform, f.crs
+
+
+def terrain_inputs(city, ww=None):
+    """Channels to burn (OSM rivers/canals/drains/streams) and the JRC permanent-water mask on the DEM grid."""
+    import geopandas as gpd
+
+    if ww is None:
+        ww = gpd.read_parquet(city.raw("hydrology") / "osm_waterways.parquet")
+    occ, occ_tr, occ_crs = _jrc_occurrence(city)
+    with rasterio.open(city.raw("elevation") / "copernicus_glo30_dem_utm30m.tif") as f:
+        dem_shape, dem_tr = f.shape, f.transform
+    perm_dem = np.zeros(dem_shape, "float32")
+    reproject((occ >= 75).astype("float32"), perm_dem, src_transform=occ_tr, src_crs=occ_crs, dst_transform=dem_tr,
+              dst_crs=city.crs, resampling=Resampling.nearest)
+    return ww[ww.waterway.isin(["river", "canal", "drain", "stream"])], perm_dem > 0.5
+
+
 def run(city_id: str = "kolkata") -> None:
     import geopandas as gpd
 
@@ -184,19 +208,11 @@ def run(city_id: str = "kolkata") -> None:
     ww = gpd.read_parquet(city.raw("hydrology") / "osm_waterways.parquet")
     wb = gpd.read_parquet(city.raw("hydrology") / "osm_water_bodies.parquet")
     wb = wb[wb.geom_type.isin(["Polygon", "MultiPolygon"])]
-    with rasterio.open(city.raw("hydrology") / "jrc_gsw_v1_4_occurrence_utm30m.tif") as f:
-        occ = f.read(1).astype("float32")
-        occ[occ > 100] = 0
-        occ_tr, occ_crs = f.transform, f.crs
+    occ, occ_tr, occ_crs = _jrc_occurrence(city)
     perm30 = occ >= 75
 
-    with rasterio.open(city.raw("elevation") / "copernicus_glo30_dem_utm30m.tif") as f:
-        dem_shape, dem_tr = f.shape, f.transform
-    perm_dem = np.zeros(dem_shape, "float32")
-    reproject(perm30.astype("float32"), perm_dem, src_transform=occ_tr, src_crs=occ_crs, dst_transform=dem_tr,
-              dst_crs=city.crs, resampling=Resampling.nearest)
     log.info("terrain + hydrological derivatives (pysheds)")
-    F.update(terrain(city, grid, ww[ww.waterway.isin(["river", "canal", "drain", "stream"])], perm_dem > 0.5))
+    F.update(terrain(city, grid, *terrain_inputs(city, ww)))
 
     fine = grid.fine(FINE)
     perm_fine = np.zeros(fine.shape, "float32")

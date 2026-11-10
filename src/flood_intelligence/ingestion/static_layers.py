@@ -4,9 +4,14 @@
 * ESA WorldCover 2021 v200 (10 m land cover)    - planetary computer `esa-worldcover`
 * JRC Global Surface Water v1.4 (occurrence, seasonality, 30 m) - planetary computer `jrc-gsw`
 * GHS-POP R2023A epoch 2020 (3 arc-sec, ~90 m) - JRC GHSL (windowed HTTP read)
+
+Optional, not part of the default `run()` (licence CC BY-NC-SA 4.0, non-commercial):
+* FABDEM V1-2 (bare-earth, 30 m)               - University of Bristol (windowed read inside the zip);
+  used only by the DEM sensitivity analysis (evaluation/dem_sensitivity.py). Never commit FABDEM data.
 """
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 import numpy as np
@@ -129,6 +134,54 @@ def fetch_population(city: City) -> Path:
     return out
 
 
+FABDEM_BASE = "https://data.bris.ac.uk/datasets/s5hqmjcdj8yo2ibzi9b4ew3sn/"
+FABDEM_LICENCE = "CC BY-NC-SA 4.0 (non-commercial); Hawker et al. 2022, doi:10.1088/1748-9326/ac4d4f"
+
+
+def _tile_label(lat: int, lon: int) -> str:
+    return f"{'N' if lat >= 0 else 'S'}{abs(lat):02d}{'E' if lon >= 0 else 'W'}{abs(lon):03d}"
+
+
+def _fabdem_tiles(bbox: tuple[float, float, float, float]) -> list[tuple[str, str]]:
+    """(zip, tif) names for every 1 x 1 degree FABDEM tile touching bbox; zips bundle 10 x 10 degree blocks."""
+    out = []
+    for lat in range(math.floor(bbox[1]), math.ceil(bbox[3])):
+        for lon in range(math.floor(bbox[0]), math.ceil(bbox[2])):
+            lat10, lon10 = math.floor(lat / 10) * 10, math.floor(lon / 10) * 10
+            z = f"{_tile_label(lat10, lon10)}-{_tile_label(lat10 + 10, lon10 + 10)}_FABDEM_V1-2.zip"
+            out.append((z, f"{_tile_label(lat, lon)}_FABDEM_V1-2.tif"))
+    return out
+
+
+def fetch_fabdem(city: City) -> Path:
+    """FABDEM V1-2 bare-earth DEM (buildings and forest removed from GLO-30), resampled onto the exact
+    30 m UTM grid of the GLO-30 raster so terrain derivatives from both DEMs are cell-for-cell comparable."""
+    ref = city.raw("elevation") / "copernicus_glo30_dem_utm30m.tif"
+    out = city.raw("elevation") / "fabdem_v1_2_utm30m.tif"
+    tiles = _fabdem_tiles(_padded(city))
+    hrefs = [f"/vsizip//vsicurl/{FABDEM_BASE}{z}/{t}" for z, t in tiles]
+    with rasterio.Env(GDAL_HTTP_MAX_RETRY=5, GDAL_HTTP_RETRY_DELAY=3), rasterio.open(ref) as r:
+        srcs = [rasterio.open(h) for h in hrefs]
+        mosaic, mtrans = merge(srcs, bounds=_padded(city), indexes=[1])
+        src_crs, nodata = srcs[0].crs, srcs[0].nodata
+        for s_ in srcs:
+            s_.close()
+        dst = np.full(r.shape, np.nan, dtype="float32")
+        reproject(mosaic[0], dst, src_transform=mtrans, src_crs=src_crs, dst_transform=r.transform, dst_crs=r.crs,
+                  resampling=Resampling.bilinear, src_nodata=nodata, dst_nodata=np.nan)
+        # FABDEM leaves large water bodies as nodata (GLO-30 is flat ~0 m there): take GLO-30 so both rasters
+        # share one valid footprint and the same nodata convention (pysheds needs a castable nodata value)
+        gap = ~np.isfinite(dst)
+        dst[gap] = r.read(1)[gap]
+        prof = r.profile | dict(dtype="float32", compress="deflate", tiled=True)
+    with rasterio.open(out, "w", **prof) as f:
+        f.write(dst, 1)
+    record("fabdem_v1_2", city.id, out, FABDEM_BASE, tiles=[t for _, t in tiles], license=FABDEM_LICENCE,
+           filled_from_glo30_frac=round(float(gap.mean()), 4),
+           note="bare-earth DEM; resampled onto the GLO-30 UTM grid; sensitivity analysis only, not redistributed")
+    return out
+
+
 def run(city_id: str = "kolkata") -> None:
     city = get_city(city_id)
     for fn in (fetch_dem, fetch_worldcover, fetch_jrc_gsw, fetch_population):
@@ -142,4 +195,7 @@ def run(city_id: str = "kolkata") -> None:
 if __name__ == "__main__":
     import sys
 
-    run(*(sys.argv[1:2] or ["kolkata"]))
+    if "--fabdem" in sys.argv:  # opt-in: non-commercial licence
+        fetch_fabdem(get_city(next((a for a in sys.argv[1:] if not a.startswith("--")), "kolkata")))
+    else:
+        run(*(sys.argv[1:2] or ["kolkata"]))

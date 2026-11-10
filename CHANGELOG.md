@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Bare-earth DEM sensitivity analysis (`flood_intelligence.evaluation.dem_sensitivity`; technical report §3a).
+  Terrain features recomputed from FABDEM V1-2 and compared with GLO-30 using identical cells, labels, folds and
+  hyperparameters, with paired block-bootstrap CIs.
+- Opt-in FABDEM acquisition (`python -m flood_intelligence.ingestion.static_layers <city> --fabdem`). It uses a
+  windowed read inside the University of Bristol zip and is not redistributed (CC BY-NC-SA 4.0). FABDEM is now in the
+  dataset catalogue.
+- `paired_cluster_bootstrap` metric helper; tests for it and for the FABDEM tile naming.
+
+### Changed
+- `static_features.terrain()` accepts an alternative DEM path; channel/permanent-water inputs are factored into
+  `terrain_inputs()`. Production features are unchanged.
+
 ## 0.1.0 — 2026-11-09
 
 Initial research release (Kolkata pilot).
