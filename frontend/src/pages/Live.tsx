@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import EChart, { AXIS } from '../components/EChart'
-import { Callout, Details, ErrorBox, Kind, Loading, PageHeader, Panel, Section, Stat } from '../components/ui'
+import { Callout, Details, Kind, Loading, PageHeader, Panel, Section, Stat } from '../components/ui'
 import { fmt, useStatic } from '../lib/data'
 import { BANDS, band, predictLive, rainWords } from '../lib/model'
 
@@ -57,9 +57,7 @@ export default function Live() {
         usually leaves Kolkata's streets under water.
       </PageHeader>
       <Section>
-        {err && <ErrorBox error={err} hint="We could not reach the weather service, so nothing is shown. Please try again later." />}
-        {!om && !err && <Loading what="the latest rain forecast" />}
-        {view && lm && (
+        {view && lm ? (
           <>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {view.days.map((d) => {
@@ -82,7 +80,33 @@ export default function Live() {
             </div>
             <p className="mt-2 text-[12px] text-mute">Updated {fetchedAt?.toLocaleTimeString()} from the Open-Meteo weather service. <button onClick={load} className="underline">Refresh</button></p>
 
-            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          </>
+        ) : err ? (
+          <div className="border border-line bg-white p-5">
+            <div className="text-[16px] font-semibold">The live forecast is not available right now</div>
+            <p className="mt-1 text-[14px] leading-relaxed text-slate">
+              We could not reach the weather service just now, so we are not showing a forecast rather than guessing. You can try again,
+              or check the latest Kolkata forecast from the{' '}
+              <a href="https://mausam.imd.gov.in/kolkata/" target="_blank" rel="noreferrer">India Meteorological Department</a>.
+            </p>
+            <button onClick={load} className="mt-3 border border-ink bg-ink px-3 py-1.5 text-[13px] text-paper">Try again</button>
+          </div>
+        ) : (
+          <Loading what="the latest rain forecast" />
+        )}
+
+        <div className="mt-6 border border-line bg-white p-5 text-[14.5px] leading-relaxed text-slate">
+          <div className="text-[16px] font-semibold text-ink">How this page works</div>
+          <p className="mt-1">
+            Each time you open this page, it fetches the hourly rain forecast for central Kolkata for yesterday, today and the next two days.
+            For each day it adds up the rain, finds the heaviest hour, and compares that pattern with the 24 days since 2016 when the news
+            reported waterlogged streets in Kolkata. It then gives each day one of four plain labels, from "Waterlogging unlikely" to
+            "Waterlogging likely in many areas". It describes the city as a whole; for individual streets and neighbourhoods, use
+            the <Link to="/intelligence">waterlogging risk map</Link>, and for past floods see the <Link to="/events">flood history</Link>.
+          </p>
+        </div>
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
               <div className="border border-line bg-white p-5">
                 <div className="text-[16px] font-semibold">What do these words mean?</div>
                 <ul className="mt-2 space-y-2 text-[14px] leading-relaxed text-slate">
@@ -104,8 +128,6 @@ export default function Live() {
               <b>This is not an official warning.</b> Forecasts can miss short, intense downpours. Always follow the{' '}
               <a href="https://mausam.imd.gov.in/" target="_blank" rel="noreferrer">India Meteorological Department</a> and the Kolkata Municipal Corporation.
             </div>
-          </>
-        )}
       </Section>
 
       {view && lm && (
