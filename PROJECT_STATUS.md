@@ -22,8 +22,8 @@ _Last updated: 2026-11-09 (end of autonomous build run)._
 | Web application | ✅ Done | 10 pages, Mode A static + Mode B API |
 | Tests | ✅ 31 passing | data, geospatial, ML, API |
 | CI | ✅ Configured | `ci.yml`; first remote run status reported in the delivery report |
-| GitHub repository | see delivery report | private |
-| GitHub Pages | ⏸ Prepared, not published | private repo; manual dispatch only |
+| GitHub repository | ✅ Public | https://github.com/Neelabho/urban-flood-intelligence |
+| GitHub Pages | ✅ Live | https://neelabho.github.io/urban-flood-intelligence/ (auto-deploys from main) |
 | Backend hosting | ⏸ Not provisioned | no free host account created; docs provided |
 
 ## Open items
@@ -31,4 +31,4 @@ _Last updated: 2026-11-09 (end of autonomous build run)._
 2. Bare-earth DEM sensitivity (FABDEM, non-commercial licence).
 3. Mumbai replication and cross-city transfer test.
 4. KMC rain-gauge / sensor data request for sub-daily labels.
-5. Decide on public release before enabling Pages.
+5. Verify the site in Google Search Console and submit the sitemap (docs/GOOGLE_SEARCH_CONSOLE.md).

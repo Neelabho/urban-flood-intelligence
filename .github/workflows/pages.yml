@@ -1,6 +1,8 @@
 name: Deploy static site to GitHub Pages
-# Manual only: the repository is private, and publishing makes the site public. See docs/DEPLOYMENT.md.
+# Publishes the static site on every push to main (and on manual dispatch). See docs/DEPLOYMENT.md.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read

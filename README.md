@@ -9,6 +9,8 @@ waterlogging** to (A) rank 250 m cells by relative waterlogging susceptibility, 
 documented event days, and (C) measure how that skill decays with lead time — and it shows every source, uncertainty and
 limitation in an interactive web application.
 
+> **Live site: https://neelabho.github.io/urban-flood-intelligence/**
+>
 > Research prototype. Not an official warning service.
 
 ## What it found (Kolkata, 2016–2026)
