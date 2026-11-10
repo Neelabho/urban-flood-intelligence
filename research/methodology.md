@@ -17,6 +17,7 @@ Code references are to `src/flood_intelligence/`. Every stage is executed by `sc
 |---|---|---|
 | Sentinel-1 RTC (VV, VH), May–Nov 2017–2025 | `sentinel1.py` | 472 date×orbit acquisitions; frames mosaicked; 20 m overview averaged onto the 25 m grid; int16 dB×100 |
 | Copernicus GLO-30 DSM | `static_layers.py` | mosaicked, bilinear to 30 m UTM |
+| FABDEM V1-2 (bare-earth; sensitivity only, CC BY-NC-SA) | `static_layers.py --fabdem` | windowed read, bilinear onto the GLO-30 30 m grid |
 | ESA WorldCover 2021 v200 | `static_layers.py` | nearest to 10 m UTM |
 | JRC GSW v1.4 occurrence/seasonality | `static_layers.py` | nearest to 30 m UTM |
 | GHS-POP R2023A 2020 (3″) | `static_layers.py` | windowed read from zipped tile (WorldPop rejected range reads) |
@@ -53,6 +54,8 @@ VV < −18 dB & VH < −24 dB; mean and temporal SD of VV).
 * **Terrain (DSM):** mean/min/SD elevation, slope, relative elevation (1 km, 2 km windows), depression depth and
   fraction > 0.5 m, D8 flow accumulation, HAND, TWI. pysheds with OSM waterways and JRC permanent water burned 3 m into
   the DSM; channels = accumulation > 1,000 cells (~0.9 km²) or burned features.
+  A bare-earth sensitivity run recomputes the same twelve features from FABDEM (`evaluation/dem_sensitivity.py`;
+  technical report §3a).
 * **Hydrology:** distances to OSM waterways, canals/drains, the Hooghly, permanent water; canal/drain density; OSM
   water-body fraction; JRC occurrence; SAR water occurrence.
 * **Urban fabric:** WorldCover fractions (tree, grass, crop, built, bare, water, wetland), OSM road density, SAR VV

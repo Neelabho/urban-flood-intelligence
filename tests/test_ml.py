@@ -10,6 +10,7 @@ from flood_intelligence.evaluation.metrics import (
     best_f1_threshold,
     cluster_bootstrap,
     expected_calibration_error,
+    paired_cluster_bootstrap,
     score,
 )
 from flood_intelligence.models.common import N_FOLDS, SEED, oof_predict, pipe
@@ -70,6 +71,19 @@ def test_cluster_bootstrap_ci_contains_point_estimate():
     ci = cluster_bootstrap(y, p, g, n_boot=200)
     est = score(y, p)["roc_auc"]
     assert ci["roc_auc"][0] <= est <= ci["roc_auc"][1]
+
+
+
+def test_paired_bootstrap_detects_better_scores_and_is_zero_for_identical():
+    rng = np.random.default_rng(2)
+    y = rng.integers(0, 2, 1000)
+    g = np.repeat(np.arange(50), 20)
+    weak = np.clip(y * 0.1 + rng.random(1000), 0, 1)
+    strong = np.clip(y * 0.6 + rng.random(1000) * 0.4, 0, 1)
+    d = paired_cluster_bootstrap(y, weak, strong, g, n_boot=200)
+    assert d["roc_auc"]["diff"] > 0 and d["roc_auc"]["ci95"][0] > 0 and d["roc_auc"]["p_b_better"] > 0.95
+    same = paired_cluster_bootstrap(y, weak, weak, g, n_boot=50)
+    assert same["pr_auc"]["diff"] == 0 and same["pr_auc"]["ci95"] == [0.0, 0.0]
 
 
 def test_otsu_bounded_respects_physical_bounds():

@@ -68,6 +68,21 @@
     ]
   },
   {
+    "dataset_id": "fabdem_v1_2",
+    "city": "kolkata",
+    "path": "data/raw/elevation/kolkata/fabdem_v1_2_utm30m.tif",
+    "source_url": "https://data.bris.ac.uk/datasets/s5hqmjcdj8yo2ibzi9b4ew3sn/",
+    "downloaded_utc": "2026-11-10T14:15:58+00:00",
+    "bytes": 5382850,
+    "sha256": "e84806bf06d28ebbf827eae56061586734f1b074433443fb36b783eac9d4dfa8",
+    "tiles": [
+      "N22E088_FABDEM_V1-2.tif"
+    ],
+    "license": "CC BY-NC-SA 4.0 (non-commercial); Hawker et al. 2022, doi:10.1088/1748-9326/ac4d4f",
+    "filled_from_glo30_frac": 0.0179,
+    "note": "bare-earth DEM; resampled onto the GLO-30 UTM grid; sensitivity analysis only, not redistributed"
+  },
+  {
     "dataset_id": "ghs_pop_2020",
     "city": "kolkata",
     "path": "data/raw/population/kolkata/ghs_pop_e2020_r2023a_3ss.tif",

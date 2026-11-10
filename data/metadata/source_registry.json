@@ -14,6 +14,13 @@
     "nature": "observed-derived (surface model)"
   },
   {
+    "id": "fabdem_v1_2",
+    "provider": "University of Bristol / Fathom (Hawker et al. 2022)",
+    "url": "https://data.bris.ac.uk/data/dataset/s5hqmjcdj8yo2ibzi9b4ew3sn",
+    "license": "CC BY-NC-SA 4.0 (non-commercial; not redistributed by UFII)",
+    "nature": "modelled (machine-learning correction of a surface model)"
+  },
+  {
     "id": "esa_worldcover_2021",
     "provider": "ESA / VITO",
     "url": "https://planetarycomputer.microsoft.com/dataset/esa-worldcover",

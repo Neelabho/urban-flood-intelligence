@@ -88,3 +88,24 @@ def cluster_bootstrap(y, p, groups, n_boot: int = 1000, seed: int = 0, thr: floa
             vals["recall"].append(tm["recall"])
             vals["precision"].append(tm["precision"])
     return {k: [float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5))] for k, v in vals.items() if v}
+
+
+def paired_cluster_bootstrap(y, p_a, p_b, groups, n_boot: int = 1000, seed: int = 0) -> dict:
+    """Difference (b - a) in ROC-AUC / PR-AUC for two score vectors on the same rows, resampling the same
+    spatial blocks for both; returns the point difference, a 95% percentile CI and P(b > a) over resamples."""
+    rng = np.random.default_rng(seed)
+    y, p_a, p_b, groups = (np.asarray(v) for v in (y, p_a, p_b, groups))
+    ug = np.unique(groups)
+    members = {g: np.flatnonzero(groups == g) for g in ug}
+    fns = {"roc_auc": roc_auc_score, "pr_auc": average_precision_score}
+    diffs: dict[str, list] = {k: [] for k in fns}
+    for _ in range(n_boot):
+        idx = np.concatenate([members[g] for g in rng.choice(ug, len(ug), replace=True)])
+        yy = y[idx]
+        if yy.sum() < 2 or yy.sum() == len(yy):
+            continue
+        for k, fn in fns.items():
+            diffs[k].append(fn(yy, p_b[idx]) - fn(yy, p_a[idx]))
+    return {k: {"diff": float(fn(y, p_b) - fn(y, p_a)),
+                "ci95": [float(np.percentile(diffs[k], 2.5)), float(np.percentile(diffs[k], 97.5))],
+                "p_b_better": float(np.mean(np.asarray(diffs[k]) > 0))} for k, fn in fns.items()}

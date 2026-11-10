@@ -46,6 +46,29 @@
     ]
   },
   {
+    "id": "fabdem_v1_2",
+    "title": "FABDEM V1-2 (bare-earth DEM: GLO-30 with buildings and forest removed)",
+    "provider": "University of Bristol / Fathom (Hawker et al. 2022)",
+    "url": "https://data.bris.ac.uk/data/dataset/s5hqmjcdj8yo2ibzi9b4ew3sn",
+    "license": "CC BY-NC-SA 4.0 (non-commercial; not redistributed by UFII)",
+    "period": "2011-2015 (GLO-30 base)",
+    "temporal_resolution": "static",
+    "spatial_resolution": "30 m",
+    "crs": "EPSG:4326 -> EPSG:32645 (resampled onto the GLO-30 grid)",
+    "format": "GeoTIFF in 10x10 degree zips",
+    "nature": "modelled (machine-learning correction of a surface model)",
+    "used_for": "bare-earth DEM sensitivity analysis of Module A terrain features only (not in the production model)",
+    "limitations": "Building/tree removal is a statistical correction, not a surveyed terrain model; residual errors are largest in dense urban cores. Non-commercial licence.",
+    "downloads": [
+      {
+        "path": "data/raw/elevation/kolkata/fabdem_v1_2_utm30m.tif",
+        "downloaded_utc": "2026-11-10T14:15:58+00:00",
+        "bytes": 5382850,
+        "sha256": "e84806bf06d28ebbf827eae56061586734f1b074433443fb36b783eac9d4dfa8"
+      }
+    ]
+  },
+  {
     "id": "esa_worldcover_2021",
     "title": "ESA WorldCover 2021 v200",
     "provider": "ESA / VITO",
