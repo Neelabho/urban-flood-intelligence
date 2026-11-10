@@ -108,8 +108,7 @@ The site is a static build (`npm run build` in `frontend/`) with clean page addr
 descriptions, a sitemap and robots.txt, so it can be hosted anywhere and indexed by search engines.
 
 It is live at **https://neelabho.github.io/urban-flood-intelligence/** and redeploys automatically on every push to
-`main`. Hosting details: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Getting onto Google:
-[`docs/GOOGLE_SEARCH_CONSOLE.md`](docs/GOOGLE_SEARCH_CONSOLE.md).
+`main`. 
 
 Developed by **Neelabho Chakraborty**.
 
